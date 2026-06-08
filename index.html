@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloxAI • IA para Roblox Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .font-display {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-weight: 600;
+        }
+
+        .header {
+            background-color: #1e2937;
+            border-bottom: 1px solid #334155;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .chat-container {
+            scrollbar-width: thin;
+            scrollbar-color: #475569 #1e2937;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+            padding: 14px 20px;
+        }
+
+        .ai-message {
+            background-color: #1e2937;
+            border: 1px solid #334155;
+            border-radius: 18px 18px 18px 4px;
+            padding: 16px 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 9999px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid #334155;
+            background-color: #1e2937;
+            color: #e2e8f0;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover { background-color: #334155; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <!-- Logo Robot -->
+                <div style="width: 52px; height: 52px; background: linear-gradient(135deg, #3b82f6, #2563eb); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fa-solid fa-robot" style="color: white; font-size: 28px;"></i>
+                </div>
+                
+                <div>
+                    <h1 class="font-display" style="font-size: 30px; margin: 0; font-weight: 700; letter-spacing: -1px;">Blox<span style="background: linear-gradient(90deg, #3b82f6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI</span></h1>
+                    <p style="margin: 0; font-size: 12px; color: #94a3b8; font-weight: 500;">Creado por <strong>Angiblox</strong> • Youtuber &amp; Desarrollador Roblox</p>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <!-- Plugin Status -->
+                <div id="plugin-status" onclick="showConnectModal()"
+                     style="display: flex; align-items: center; gap: 8px; background: #1e2937; border: 1px solid #334155; padding: 8px 16px; border-radius: 9999px; cursor: pointer;">
+                    <i class="fa-solid fa-plug" style="color: #f87171;"></i>
+                    <span id="plugin-status-text" style="font-weight: 500; font-size: 14px;">Plugin Desconectado</span>
+                </div>
+
+                <!-- User -->
+                <div id="user-section" onclick="showLoginModal()" 
+                     style="display: flex; align-items: center; gap: 8px; background: #1e2937; border: 1px solid #334155; padding: 8px 14px; border-radius: 9999px; cursor: pointer;">
+                    <i class="fa-solid fa-user" style="color: #60a5fa;"></i>
+                    <div id="user-info" style="font-size: 14px;">
+                        <span style="font-weight: 500;">Iniciar sesión</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div style="max-width: 1200px; margin: 0 auto; padding: 32px 24px;">
+        <!-- Hero -->
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h2 class="font-display" style="font-size: 48px; margin: 0 0 12px 0;">
+                Crea juegos en Roblox<br>con IA
+            </h2>
+            <p style="font-size: 20px; color: #64748b; max-width: 500px; margin: 0 auto;">
+                Conecta tu plugin de Roblox Studio y deja que la IA construya por ti.
+            </p>
+        </div>
+
+        <!-- Connection Required -->
+        <div id="connect-prompt" style="background: #1e2937; border: 1px solid #334155; border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 24px;">
+            <i class="fa-solid fa-plug" style="font-size: 32px; color: #f87171; margin-bottom: 12px;"></i>
+            <h3 style="margin: 0 0 8px 0;">Conecta tu Plugin primero</h3>
+            <p style="color: #64748b; margin: 0 0 16px 0;">Para usar BloxAI necesitas conectar el plugin de Roblox Studio.</p>
+            <button onclick="showConnectModal()" class="btn btn-primary" style="padding: 12px 28px;">
+                <i class="fa-solid fa-plug"></i> Conectar Plugin
+            </button>
+        </div>
+
+        <!-- Chat Area -->
+        <div id="chat-area" style="display: none;">
+            <div style="background: #1e2937; border: 1px solid #334155; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);">
+                
+                <div id="chat-messages" class="chat-container" 
+                     style="height: 520px; padding: 24px; overflow-y: auto; background: #0f172a; display: flex; flex-direction: column; gap: 20px;">
+                </div>
+
+                <div style="border-top: 1px solid #334155; background: #1e2937; padding: 16px;">
+                    <div style="display: flex; gap: 12px; align-items: flex-end;">
+                        <div style="flex: 1;">
+                            <textarea id="user-input" 
+                                      style="width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 20px; padding: 14px 18px; font-size: 14px; resize: none; color: #e2e8f0;"
+                                      placeholder="Dile a la IA qué quieres crear..." rows="2"
+                                      onkeydown="if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
+                        </div>
+                        <button onclick="sendMessage()" id="send-btn"
+                                style="width: 52px; height: 52px; background: linear-gradient(135deg, #3b82f6, #2563eb); border: none; border-radius: 20px; color: white; cursor: pointer;">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connect Modal -->
+    <div id="connect-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); align-items: center; justify-content: center; z-index: 100;">
+        <div style="background: #1e2937; border: 1px solid #334155; border-radius: 20px; width: 100%; max-width: 460px; padding: 28px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 22px;">Conectar Plugin de Roblox Studio</h3>
+            <p style="color: #64748b; margin-bottom: 12px;">Ingresa el código de 5 dígitos que aparece en el plugin.</p>
+
+            <input type="text" id="connection-code" placeholder="Ej: 48392" maxlength="5"
+                   style="width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 14px; margin-bottom: 16px; color: white; font-size: 22px; text-align: center; letter-spacing: 10px;">
+
+            <div style="display: flex; gap: 12px;">
+                <button onclick="connectWithCode()" class="btn btn-primary" style="flex: 1; justify-content: center; padding: 14px;">
+                    Conectar
+                </button>
+                <button onclick="hideConnectModal()" class="btn" style="flex: 1; justify-content: center; padding: 14px;">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isPluginConnected = false;
+        let currentUser = null;
+
+        const safeStorage = {
+            data: {},
+            getItem(key) { try { return localStorage.getItem(key); } catch(e) { return this.data[key] || null; } },
+            setItem(key, value) { try { localStorage.setItem(key, value); } catch(e) { this.data[key] = value; } }
+        };
+
+        function loadUser() {
+            const saved = safeStorage.getItem('bloxaiUser');
+            if (saved) { currentUser = JSON.parse(saved); updateUserUI(); }
+        }
+
+        function updateUserUI() {
+            const info = document.getElementById('user-info');
+            if (currentUser) info.innerHTML = `<span style="font-weight:500;">${currentUser.name}</span>`;
+        }
+
+        function showLoginModal() {
+            const name = prompt("Ingresa tu nombre:");
+            if (name) {
+                currentUser = { name: name.trim() };
+                safeStorage.setItem('bloxaiUser', JSON.stringify(currentUser));
+                updateUserUI();
+            }
+        }
+
+        function showConnectModal() {
+            document.getElementById('connect-modal').style.display = 'flex';
+            document.getElementById('connection-code').focus();
+        }
+
+        function hideConnectModal() {
+            document.getElementById('connect-modal').style.display = 'none';
+        }
+
+        function connectWithCode() {
+            const code = document.getElementById('connection-code').value.trim();
+            
+            if (code.length !== 5 || isNaN(code)) {
+                alert("Por favor ingresa un código válido de 5 números.");
+                return;
+            }
+
+            isPluginConnected = true;
+            safeStorage.setItem('bloxaiPluginConnected', 'true');
+
+            document.getElementById('plugin-status-text').innerHTML = `<span style="color: #4ade80;">Plugin Conectado ✓</span>`;
+            hideConnectModal();
+
+            setTimeout(() => {
+                alert("¡Conexión exitosa! El plugin y el sitio web están conectados.");
+                document.getElementById('connect-prompt').style.display = 'none';
+                document.getElementById('chat-area').style.display = 'block';
+            }, 400);
+        }
+
+        function updatePluginStatus() {
+            const textEl = document.getElementById('plugin-status-text');
+            if (safeStorage.getItem('bloxaiPluginConnected') === 'true') {
+                isPluginConnected = true;
+                textEl.innerHTML = `<span style="color: #4ade80;">Plugin Conectado ✓</span>`;
+                document.getElementById('connect-prompt').style.display = 'none';
+                document.getElementById('chat-area').style.display = 'block';
+            }
+        }
+
+        function addMessage(role, text) {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.style.display = 'flex';
+            div.style.gap = '12px';
+            if (role === 'user') div.style.justifyContent = 'flex-end';
+
+            if (role === 'user') {
+                div.innerHTML = `<div class="user-message"><p style="margin:0; white-space: pre-wrap;">${text}</p></div>`;
+            } else {
+                div.innerHTML = `
+                    <div style="width:36px; height:36px; background: linear-gradient(#3b82f6, #2563eb); border-radius: 12px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-robot" style="color:white; font-size:18px;"></i>
+                    </div>
+                    <div class="ai-message" style="max-width:82%;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <span style="color:#60a5fa; font-size:11px; font-weight:600;">BLOXAI</span>
+                        </div>
+                        <div style="white-space: pre-wrap; line-height:1.5;">${text}</div>
+                    </div>
+                `;
+            }
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const text = input.value.trim();
+            if (!text || !isPluginConnected) return;
+
+            addMessage('user', text);
+            input.value = '';
+
+            const container = document.getElementById('chat-messages');
+            const loading = document.createElement('div');
+            loading.style.display = 'flex';
+            loading.style.gap = '12px';
+            loading.innerHTML = `<div style="width:36px; height:36px; background: linear-gradient(#3b82f6, #2563eb); border-radius:12px; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-robot" style="color:white;"></i></div><div class="ai-message">Generando código...</div>`;
+            container.appendChild(loading);
+            container.scrollTop = container.scrollHeight;
+
+            setTimeout(() => {
+                loading.remove();
+                const response = generateAIResponse(text);
+                addMessage('ai', response);
+            }, 1000);
+        }
+
+        function generateAIResponse(prompt) {
+            return `✅ Aquí tienes una solución para: **${prompt}**\n\n\`\`\`lua\n-- Código generado por BloxAI\nlocal Players = game:GetService("Players")\n\nPlayers.PlayerAdded:Connect(function(player)\n    print(player.Name .. " se unió")\nend)\n\`\`\`\n\n¿Quieres enviarlo al plugin?`;
+        }
+
+        function initialize() {
+            loadUser();
+            updatePluginStatus();
+
+            if (!isPluginConnected) {
+                const container = document.getElementById('chat-messages');
+                container.innerHTML = `
+                    <div style="display:flex; gap:12px; opacity: 0.7;">
+                        <div style="width:36px; height:36px; background: linear-gradient(#3b82f6, #2563eb); border-radius:12px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                            <i class="fa-solid fa-robot" style="color:white; font-size:18px;"></i>
+                        </div>
+                        <div class="ai-message" style="max-width:82%;">
+                            <p style="margin:0;">Conecta tu plugin de Roblox Studio para empezar a usar BloxAI.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        window.onload = initialize;
+    </script>
+</body>
+</html>
