@@ -297,51 +297,80 @@
 
         function sendMessage() {
             const input = document.getElementById('user-input');
-            const text = input.value.trim();
-            if (!text || !isPluginConnected || !currentConnectionCode) return;
+            const promptText = input.value.trim();
+            if (!promptText || !isPluginConnected || !currentConnectionCode) return;
 
-            addMessage('user', text);
+            addMessage('user', promptText);
             input.value = '';
 
             const container = document.getElementById('chat-messages');
             const loading = document.createElement('div');
-            loading.style.display = 'flex';
-            loading.style.gap = '12px';
-            loading.innerHTML = `<div style="width:36px; height:36px; background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius:12px; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-cubes" style="color:white;"></i></div><div class="ai-message">Pensando...</div>`;
+            loading.style.cssText = 'display:flex;gap:12px;';
+            loading.innerHTML = '<div class="ai-message">Preparando acción para Roblox Studio...</div>';
             container.appendChild(loading);
             container.scrollTop = container.scrollHeight;
 
-            setTimeout(() => {
-                loading.remove();
-                const response = generateAIResponse(text);
-                addMessage('ai', response);
+            const result = buildStudioAction(promptText);
+            loading.remove();
+            addMessage('ai', result.message);
 
-                // Extraer código Lua y enviarlo al backend
-                const codeMatch = response.match(/```lua\n([\s\S]*?)```/);
-                if (codeMatch && currentConnectionCode) {
-                    const script = codeMatch[1].trim();
-                    fetch(BACKEND_URL + "/send", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ code: currentConnectionCode, script: script })
-                    }).then(() => {
-                        console.log("Código enviado al plugin");
-                    }).catch(err => console.error("Error enviando código:", err));
-                }
-            }, 1200);
+            if (!result.action) return;
+
+            fetch(BACKEND_URL + "/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    code: currentConnectionCode,
+                    script: JSON.stringify(result.action)
+                })
+            })
+            .then(async response => {
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || !data.ok) throw new Error(data.error || "El backend rechazó la acción.");
+                addMessage('ai', 'Acción enviada al plugin. En Roblox Studio, pulsa “APLICAR ACCIÓN” para confirmar los cambios.');
+            })
+            .catch(error => {
+                console.error("ABX Build:", error);
+                addMessage('ai', 'No pude enviar la acción al backend. Comprueba que el servicio esté activo y vuelve a intentarlo.');
+            });
         }
 
-        function generateAIResponse(prompt) {
-            const lower = prompt.toLowerCase();
-            const robloxKeywords = ["script", "haz", "crea", "hazme", "quiero que", "cuando el jugador", "ui", "gui", "part", "modelo", "sistema", "evento", "remote", "tycoon", "obby", "inventario", "ejecuta", "código", "codigo", "studio"];
+        // Prototipo de acciones estructuradas: no ejecuta Lua arbitrario ni afirma usar una IA externa.
+        function buildStudioAction(userPrompt) {
+            const lower = userPrompt.toLowerCase();
 
-            const wantsCode = robloxKeywords.some(k => lower.includes(k));
-
-            if (wantsCode) {
-                return `Entendido. Te genero el código para eso.\n\n\`\`\`lua\n-- Generado por ABX Build\nlocal Players = game:GetService("Players")\n\n-- Ejemplo basado en: ${prompt}\nprint("ABX Build ejecutó la solicitud")\n\`\`\`\n\nEl código se envió al plugin. Revisa el panel de ABX Build en Studio y haz clic en "EJECUTAR CÓDIGO EN STUDIO".`;
-            } else {
-                return `Hola, soy ABX Build. Puedo ayudarte a crear scripts, UIs y sistemas en Roblox Studio.\n\nDime qué quieres que haga (por ejemplo: "haz un script que diga hola cuando el jugador entre" o "crea una UI de inventario") y te generaré el código para el plugin.`;
+            if (/(interfaz|\\bui\\b|\\bgui\\b|botón|boton|menú|menu|pantalla)/i.test(lower)) {
+                const titleMatch = userPrompt.match(/(?:llamad[oa]|titulad[oa]|con el título|con el titulo)\\s+["“]?([^"”.,]+)["”]?/i);
+                const title = (titleMatch ? titleMatch[1] : "Mi interfaz").trim().slice(0, 48);
+                return {
+                    action: { type: "CREATE_GUI", title: title },
+                    message: 'Preparé una interfaz básica llamada "' + title + '". Se creará en StarterGui y tendrá un botón de prueba.'
+                };
             }
+
+            if (/(pieza|bloque|part|plataforma|pared|cubo)/i.test(lower)) {
+                const sizeMatch = userPrompt.match(/(?:tamaño|tamano|size)\\s*(?:de|:|=)?\\s*(\\d+(?:\\.\\d+)?)\\s*[,x×]\\s*(\\d+(?:\\.\\d+)?)\\s*[,x×]\\s*(\\d+(?:\\.\\d+)?)/i);
+                const size = sizeMatch ? sizeMatch.slice(1, 4).map(Number) : [10, 1, 10];
+                const colors = [
+                    ["roja", "red"], ["rojo", "red"], ["azul", "blue"], ["verde", "green"],
+                    ["amarilla", "yellow"], ["amarillo", "yellow"], ["negra", "black"], ["negro", "black"],
+                    ["blanca", "white"], ["blanco", "white"], ["morada", "purple"], ["morado", "purple"],
+                    ["naranja", "orange"]
+                ];
+                let color = "blue";
+                for (const pair of colors) {
+                    if (lower.includes(pair[0])) { color = pair[1]; break; }
+                }
+                return {
+                    action: { type: "CREATE_PART", name: "ABX_Part", size: size, color: color, position: [0, 5, 0], anchored: true },
+                    message: 'Preparé una pieza ' + color + ' de tamaño ' + size.join(', ') + ' studs. La acción se enviará al plugin para que la apliques.'
+                };
+            }
+
+            return {
+                action: null,
+                message: 'Este prototipo ya puede crear piezas y una interfaz básica en Studio. Prueba: “Crea una pieza azul de tamaño 10, 1, 10” o “Crea una interfaz con un botón”. Para convertirlo en un generador con IA real, después conectaremos un proveedor de modelos al backend.'
+            };
         }
 
         function initialize() {
