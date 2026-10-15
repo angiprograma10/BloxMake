@@ -265,14 +265,14 @@
             });
         }
 
-        function updatePluginStatus() {
+        function updatePluginStatus(connected) {
             const textEl = document.getElementById('plugin-status-text');
-            if (safeStorage.getItem('abxPluginConnected') === 'true') {
-                isPluginConnected = true;
-                textEl.innerHTML = `<span style="color: #4ade80;">Plugin Conectado ✓</span>`;
-                document.getElementById('connect-prompt').style.display = 'none';
-                document.getElementById('chat-area').style.display = 'block';
-            }
+            isPluginConnected = Boolean(connected);
+            textEl.textContent = isPluginConnected ? 'Plugin Conectado ✓' : 'Plugin Desconectado';
+            textEl.style.color = isPluginConnected ? '#4ade80' : '#f87171';
+            document.getElementById('connect-prompt').style.display = isPluginConnected ? 'none' : 'block';
+            document.getElementById('chat-area').style.display = isPluginConnected ? 'block' : 'none';
+            safeStorage.setItem('abxPluginConnected', isPluginConnected ? 'true' : 'false');
         }
 
         function addMessage(role, text) {
@@ -395,24 +395,35 @@
             };
         }
 
-        function initialize() {
+        async function initialize() {
             loadUser();
-            const savedCode = safeStorage.getItem('abxConnectionCode');
-            if (savedCode) currentConnectionCode = savedCode;
-            updatePluginStatus();
+            updatePluginStatus(false);
 
-            if (!isPluginConnected) {
-                const container = document.getElementById('chat-messages');
-                container.innerHTML = `
-                    <div style="display:flex; gap:12px; opacity: 0.7;">
-                        <div style="width:36px; height:36px; background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius:12px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
-                            <i class="fa-solid fa-cubes" style="color:white; font-size:18px;"></i>
-                        </div>
-                        <div class="ai-message" style="max-width:82%;">
-                            <p style="margin:0;">Conecta tu plugin de ABX Build para empezar a crear.</p>
-                        </div>
-                    </div>
-                `;
+            const container = document.getElementById('chat-messages');
+            container.textContent = '';
+            addMessage('ai', 'Conecta tu plugin de ABX Build para empezar a crear.');
+
+            // La conexión guardada no se considera activa hasta verificarla con el backend.
+            const savedCode = safeStorage.getItem('abxConnectionCode');
+            if (!savedCode || !/^\\d{5}$/.test(savedCode)) return;
+
+            try {
+                const response = await fetch(BACKEND_URL + '/connect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: savedCode })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || !data.ok) {
+                    safeStorage.setItem('abxConnectionCode', '');
+                    return;
+                }
+                currentConnectionCode = savedCode;
+                updatePluginStatus(true);
+                container.textContent = '';
+                addMessage('ai', 'Conexión verificada. ¿Qué quieres construir en Roblox Studio?');
+            } catch (error) {
+                console.warn('ABX Build: no se pudo verificar la conexión guardada.', error);
             }
         }
 
