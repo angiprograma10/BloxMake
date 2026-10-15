@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -216,6 +217,9 @@
             document.getElementById('connect-modal').style.display = 'none';
         }
 
+        const BACKEND_URL = "https://abx-build-backend.onrender.com";
+        let currentConnectionCode = null;
+
         function connectWithCode() {
             const code = document.getElementById('connection-code').value.trim();
             
@@ -224,17 +228,35 @@
                 return;
             }
 
-            isPluginConnected = true;
-            safeStorage.setItem('abxPluginConnected', 'true');
+            fetch(BACKEND_URL + "/connect", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ code: code })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.ok) {
+                    isPluginConnected = true;
+                    currentConnectionCode = code;
+                    safeStorage.setItem('abxPluginConnected', 'true');
+                    safeStorage.setItem('abxConnectionCode', code);
 
-            document.getElementById('plugin-status-text').innerHTML = `<span style="color: #4ade80;">Plugin Conectado ✓</span>`;
-            hideConnectModal();
+                    document.getElementById('plugin-status-text').innerHTML = `<span style="color: #4ade80;">Plugin Conectado ✓</span>`;
+                    hideConnectModal();
 
-            setTimeout(() => {
-                alert("¡Conexión exitosa! El plugin y ABX Build están conectados.");
-                document.getElementById('connect-prompt').style.display = 'none';
-                document.getElementById('chat-area').style.display = 'block';
-            }, 400);
+                    setTimeout(() => {
+                        alert("¡Conexión exitosa con el backend!");
+                        document.getElementById('connect-prompt').style.display = 'none';
+                        document.getElementById('chat-area').style.display = 'block';
+                    }, 300);
+                } else {
+                    alert("Código no encontrado. Genera uno nuevo en el plugin.");
+                }
+            })
+            .catch(err => {
+                alert("Error al conectar con el backend. Revisa la consola.");
+                console.error(err);
+            });
         }
 
         function updatePluginStatus() {
@@ -276,7 +298,7 @@
         function sendMessage() {
             const input = document.getElementById('user-input');
             const text = input.value.trim();
-            if (!text || !isPluginConnected) return;
+            if (!text || !isPluginConnected || !currentConnectionCode) return;
 
             addMessage('user', text);
             input.value = '';
@@ -293,6 +315,19 @@
                 loading.remove();
                 const response = generateAIResponse(text);
                 addMessage('ai', response);
+
+                // Extraer código Lua y enviarlo al backend
+                const codeMatch = response.match(/```lua\n([\s\S]*?)```/);
+                if (codeMatch && currentConnectionCode) {
+                    const script = codeMatch[1].trim();
+                    fetch(BACKEND_URL + "/send", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ code: currentConnectionCode, script: script })
+                    }).then(() => {
+                        console.log("Código enviado al plugin");
+                    }).catch(err => console.error("Error enviando código:", err));
+                }
             }, 1200);
         }
 
@@ -302,6 +337,8 @@
 
         function initialize() {
             loadUser();
+            const savedCode = safeStorage.getItem('abxConnectionCode');
+            if (savedCode) currentConnectionCode = savedCode;
             updatePluginStatus();
 
             if (!isPluginConnected) {
