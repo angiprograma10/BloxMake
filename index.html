@@ -196,7 +196,13 @@
 
         function updateUserUI() {
             const info = document.getElementById('user-info');
-            if (currentUser) info.innerHTML = `<span style="font-weight:500;">${currentUser.name}</span>`;
+            if (currentUser) {
+                info.textContent = '';
+                const name = document.createElement('span');
+                name.style.fontWeight = '500';
+                name.textContent = String(currentUser.name || '').slice(0, 40);
+                info.appendChild(name);
+            }
         }
 
         function showLoginModal() {
@@ -277,19 +283,35 @@
             if (role === 'user') div.style.justifyContent = 'flex-end';
 
             if (role === 'user') {
-                div.innerHTML = `<div class="user-message"><p style="margin:0; white-space: pre-wrap;">${text}</p></div>`;
+                const bubble = document.createElement('div');
+                bubble.className = 'user-message';
+                const paragraph = document.createElement('p');
+                paragraph.style.cssText = 'margin:0;white-space:pre-wrap;';
+                paragraph.textContent = String(text);
+                bubble.appendChild(paragraph);
+                div.appendChild(bubble);
             } else {
-                div.innerHTML = `
-                    <div style="width:36px; height:36px; background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius: 12px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
-                        <i class="fa-solid fa-cubes" style="color:white; font-size:18px;"></i>
-                    </div>
-                    <div class="ai-message" style="max-width:82%;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                            <span style="color:#60a5fa; font-size:11px; font-weight:600;">ABX BUILD</span>
-                        </div>
-                        <div style="white-space: pre-wrap; line-height:1.6;">${text}</div>
-                    </div>
-                `;
+                const avatar = document.createElement('div');
+                avatar.style.cssText = 'width:36px;height:36px;background:linear-gradient(135deg,#3b82f6,#7c3aed);border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;';
+                const avatarIcon = document.createElement('i');
+                avatarIcon.className = 'fa-solid fa-cubes';
+                avatarIcon.style.cssText = 'color:white;font-size:18px;';
+                avatar.appendChild(avatarIcon);
+
+                const bubble = document.createElement('div');
+                bubble.className = 'ai-message';
+                bubble.style.maxWidth = '82%';
+                const label = document.createElement('div');
+                label.style.cssText = 'display:flex;justify-content:space-between;margin-bottom:6px;';
+                const brand = document.createElement('span');
+                brand.style.cssText = 'color:#60a5fa;font-size:11px;font-weight:600;';
+                brand.textContent = 'ABX BUILD';
+                label.appendChild(brand);
+                const message = document.createElement('div');
+                message.style.cssText = 'white-space:pre-wrap;line-height:1.6;';
+                message.textContent = String(text);
+                bubble.append(label, message);
+                div.append(avatar, bubble);
             }
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
@@ -339,8 +361,8 @@
         function buildStudioAction(userPrompt) {
             const lower = userPrompt.toLowerCase();
 
-            if (/(interfaz|\\bui\\b|\\bgui\\b|botón|boton|menú|menu|pantalla)/i.test(lower)) {
-                const titleMatch = userPrompt.match(/(?:llamad[oa]|titulad[oa]|con el título|con el titulo)\\s+["“]?([^"”.,]+)["”]?/i);
+            if (/(interfaz|\bui\b|\bgui\b|botón|boton|menú|menu|pantalla)/i.test(lower)) {
+                const titleMatch = userPrompt.match(/(?:llamad[oa]|titulad[oa]|con el título|con el titulo)\s+["“]?([^"”.,]+)["”]?/i);
                 const title = (titleMatch ? titleMatch[1] : "Mi interfaz").trim().slice(0, 48);
                 return {
                     action: { type: "CREATE_GUI", title: title },
@@ -349,7 +371,7 @@
             }
 
             if (/(pieza|bloque|part|plataforma|pared|cubo)/i.test(lower)) {
-                const sizeMatch = userPrompt.match(/(?:tamaño|tamano|size)\\s*(?:de|:|=)?\\s*(\\d+(?:\\.\\d+)?)\\s*[,x×]\\s*(\\d+(?:\\.\\d+)?)\\s*[,x×]\\s*(\\d+(?:\\.\\d+)?)/i);
+                const sizeMatch = userPrompt.match(/(?:tamaño|tamano|size)\s*(?:de|:|=)?\s*(\d+(?:\.\d+)?)\s*[,x×]\s*(\d+(?:\.\d+)?)\s*[,x×]\s*(\d+(?:\.\d+)?)/i);
                 const size = sizeMatch ? sizeMatch.slice(1, 4).map(Number) : [10, 1, 10];
                 const colors = [
                     ["roja", "red"], ["rojo", "red"], ["azul", "blue"], ["verde", "green"],
