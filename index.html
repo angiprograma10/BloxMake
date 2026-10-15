@@ -1,5 +1,5 @@
 
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -307,7 +307,7 @@
             const loading = document.createElement('div');
             loading.style.display = 'flex';
             loading.style.gap = '12px';
-            loading.innerHTML = `<div style="width:36px; height:36px; background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius:12px; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-cubes" style="color:white;"></i></div><div class="ai-message">Generando código...</div>`;
+            loading.innerHTML = `<div style="width:36px; height:36px; background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius:12px; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-cubes" style="color:white;"></i></div><div class="ai-message">Pensando...</div>`;
             container.appendChild(loading);
             container.scrollTop = container.scrollHeight;
 
@@ -332,7 +332,16 @@
         }
 
         function generateAIResponse(prompt) {
-            return `✅ Solución para: **${prompt}**\n\n\`\`\`lua\n-- Generado por ABX Build\nlocal Players = game:GetService("Players")\n\nPlayers.PlayerAdded:Connect(function(player)\n    print(player.Name .. " se unió al juego")\nend)\n\`\`\`\n\n¿Quieres enviarlo al plugin para ejecutarlo?`;
+            const lower = prompt.toLowerCase();
+            const robloxKeywords = ["script", "haz", "crea", "hazme", "quiero que", "cuando el jugador", "ui", "gui", "part", "modelo", "sistema", "evento", "remote", "tycoon", "obby", "inventario", "ejecuta", "código", "codigo", "studio"];
+
+            const wantsCode = robloxKeywords.some(k => lower.includes(k));
+
+            if (wantsCode) {
+                return `Entendido. Te genero el código para eso.\n\n\`\`\`lua\n-- Generado por ABX Build\nlocal Players = game:GetService("Players")\n\n-- Ejemplo basado en: ${prompt}\nprint("ABX Build ejecutó la solicitud")\n\`\`\`\n\nEl código se envió al plugin. Revisa el panel de ABX Build en Studio y haz clic en "EJECUTAR CÓDIGO EN STUDIO".`;
+            } else {
+                return `Hola, soy ABX Build. Puedo ayudarte a crear scripts, UIs y sistemas en Roblox Studio.\n\nDime qué quieres que haga (por ejemplo: "haz un script que diga hola cuando el jugador entre" o "crea una UI de inventario") y te generaré el código para el plugin.`;
+            }
         }
 
         function initialize() {
