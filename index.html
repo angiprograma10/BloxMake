@@ -214,6 +214,142 @@
         @media(max-width:700px) { .header > div { padding:12px 15px!important; } .hero { min-height:0;padding:35px 22px 28px!important;text-align:center!important; } .hero h2 { max-width:none;font-size:37px!important; } .hero p { max-width:none!important;margin:0 auto!important; } .hero-cta { justify-content:center!important; } .hero-preview { display:none; } .feature-strip { grid-template-columns:1fr!important; } #chat-messages { height:420px!important;padding:17px!important; } #connect-prompt { padding:25px 18px!important; } .section-heading { align-items:flex-start!important;flex-direction:column;gap:12px!important; } }
         @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important;scroll-behavior:auto!important;transition:none!important; } }
 
+
+        /* ABX Build brand palette: BLUE + ORANGE */
+        :root {
+            --bg:#07111f;
+            --surface:#0e1b2c;
+            --surface-2:#13243a;
+            --surface-3:#1a2f49;
+            --border:rgba(114,169,224,.18);
+            --text:#f3f8ff;
+            --muted:#9cb0c8;
+            --accent:#ff8a32;
+            --accent-blue:#398bff;
+        }
+        body {
+            background:
+              radial-gradient(ellipse at 78% 2%,rgba(255,133,43,.13),transparent 31%),
+              radial-gradient(ellipse at 8% 18%,rgba(45,126,255,.18),transparent 34%),
+              #07111f;
+        }
+        body:before {
+            background-image:linear-gradient(rgba(77,151,237,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(77,151,237,.075) 1px,transparent 1px);
+        }
+        .brand-mark {
+            background:linear-gradient(140deg,#2584ff,#ff8a32)!important;
+            box-shadow:0 8px 26px rgba(48,132,255,.28)!important;
+        }
+        .header h1 span {
+            background:linear-gradient(90deg,#56a2ff,#ff9a45)!important;
+            -webkit-background-clip:text!important;
+            -webkit-text-fill-color:transparent!important;
+        }
+        #plugin-status:hover,#user-section:hover {
+            border-color:rgba(70,151,255,.45)!important;
+        }
+        #user-section i { color:#63aaff!important; }
+        .hero {
+            border-color:rgba(65,145,255,.23)!important;
+            background:linear-gradient(115deg,rgba(15,35,59,.98),rgba(11,24,42,.94) 63%,rgba(48,31,25,.76))!important;
+        }
+        .hero:before {
+            background:rgba(255,132,43,.15);
+        }
+        .hero .eyebrow {
+            border-color:rgba(255,145,65,.3);
+            background:rgba(255,138,50,.09);
+            color:#ffc18f;
+        }
+        .hero h2 {
+            background:linear-gradient(105deg,#ffffff 10%,#a9d3ff 76%,#ffb16e 110%)!important;
+            -webkit-background-clip:text!important;
+            -webkit-text-fill-color:transparent!important;
+        }
+        .btn-primary {
+            background:linear-gradient(110deg,#267eff 0%,#438fff 52%,#ff8a32 150%)!important;
+            box-shadow:0 8px 24px rgba(43,126,255,.23)!important;
+        }
+        .btn-primary:hover {
+            box-shadow:0 10px 30px rgba(255,138,50,.2),0 8px 28px rgba(43,126,255,.26)!important;
+        }
+        .preview-mini-logo {
+            background:linear-gradient(140deg,#2584ff,#ff8a32)!important;
+        }
+        .preview-kicker { color:#ffad70!important; }
+        .preview-prompt i:first-child { color:#ffab69!important; }
+        .preview-prompt i:last-child {
+            background:linear-gradient(140deg,#3289ff,#ff8a32)!important;
+        }
+        .preview-live i {
+            background:#6ee7b7;
+            box-shadow:0 0 10px rgba(110,231,183,.7);
+        }
+        .preview-sidebar span.active {
+            color:#9bcaff;
+            background:rgba(48,132,255,.18);
+        }
+        .preview-floating {
+            border-color:rgba(255,145,65,.26);
+            background:rgba(27,29,34,.97);
+        }
+        .floating-icon {
+            background:rgba(255,138,50,.15);
+            color:#ffae72;
+        }
+        .preview-floating b { color:#fff0e4; }
+        .preview-floating small { color:#b3a293; }
+        .feature-icon {
+            background:rgba(47,132,255,.14)!important;
+            color:#79b7ff!important;
+        }
+        .feature:hover { border-color:rgba(255,145,65,.28)!important; }
+        .section-heading h3 { color:#f0f6ff!important; }
+        .project-tag {
+            background:rgba(45,132,255,.11)!important;
+            border-color:rgba(75,155,255,.22)!important;
+            color:#9bcaff!important;
+        }
+        .project-card:hover { border-color:rgba(255,145,65,.42)!important; }
+        .art-soccer {
+            background:radial-gradient(circle at 70% 25%,rgba(255,255,255,.2),transparent 22%),linear-gradient(135deg,#0c4384,#237fe3)!important;
+        }
+        .art-choice {
+            background:radial-gradient(circle at 22% 30%,rgba(255,255,255,.18),transparent 22%),linear-gradient(135deg,#8a3c15,#f18a36)!important;
+        }
+        .art-build {
+            background:radial-gradient(circle at 80% 20%,rgba(255,255,255,.18),transparent 20%),linear-gradient(135deg,#123c66,#e97827)!important;
+        }
+        .project-foot i { color:#ff9b50!important; }
+        #connect-prompt > i {
+            color:#ff9b50!important;
+            background:rgba(255,138,50,.09)!important;
+            border-color:rgba(255,138,50,.2)!important;
+        }
+        #connect-prompt .btn-primary {
+            background:linear-gradient(110deg,#287fff,#ff8a32)!important;
+        }
+        #send-btn {
+            background:linear-gradient(135deg,#2d85ff,#ff8a32)!important;
+            box-shadow:0 8px 20px rgba(45,133,255,.22)!important;
+        }
+        .user-message {
+            background:linear-gradient(130deg,#287fff,#1764c8)!important;
+            box-shadow:0 8px 25px rgba(45,126,255,.18)!important;
+        }
+        .ai-message { border-color:rgba(104,160,220,.17)!important; }
+        #user-input:focus,#connection-code:focus {
+            outline:2px solid rgba(61,145,255,.7)!important;
+        }
+        #connection-code { caret-color:#ff9a45; }
+        #connect-modal .btn-primary {
+            background:linear-gradient(110deg,#287fff,#ff8a32)!important;
+        }
+        .site-footer strong { color:#b7d8ff!important; }
+        @media(max-width:700px) {
+            .hero { background:linear-gradient(145deg,rgba(15,35,59,.98),rgba(11,24,42,.94) 72%,rgba(48,31,25,.76))!important; }
+        }
+
     </style>
 </head>
 <body>
