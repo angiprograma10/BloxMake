@@ -340,9 +340,12 @@
             container.appendChild(loading);
             container.scrollTop = container.scrollHeight;
 
+            const requestController = new AbortController();
+            const requestTimeout = setTimeout(() => requestController.abort(), 30000);
             try {
                 const response = await fetch(BACKEND_URL + '/chat', {
                     method: 'POST',
+                    signal: requestController.signal,
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         code: currentConnectionCode,
@@ -367,8 +370,12 @@
             } catch (error) {
                 loading.remove();
                 console.error('ABX Build:', error);
-                addMessage('ai', error.message || 'No pude conectar con la IA. Inténtalo de nuevo.');
+                const errorMessage = error.name === 'AbortError'
+                    ? 'La respuesta tardó demasiado. Gemini puede estar saturado; espera unos segundos y vuelve a intentarlo.'
+                    : (error.message || 'No pude conectar con la IA. Inténtalo de nuevo.');
+                addMessage('ai', errorMessage);
             } finally {
+                clearTimeout(requestTimeout);
                 sendButton.disabled = false;
                 sendButton.style.opacity = '1';
                 input.focus();
