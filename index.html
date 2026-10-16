@@ -86,16 +86,38 @@ body:before {
 .btn-primary:hover { transform:translateY(-1px); }
 .btn-ghost { background:rgba(8,16,30,.45); border:1px solid var(--line); color:#e7eef8; }
 .hero-card {
-  position:relative; border-radius:22px; padding:18px;
-  background:rgba(7,14,26,.72); border:1px solid rgba(255,179,111,.22);
+  position:relative; border-radius:22px; padding:14px;
+  background:rgba(7,14,26,.78); border:1px solid rgba(255,179,111,.22);
   box-shadow:0 24px 50px rgba(0,0,0,.28);
 }
-.hero-logo { width:100%; aspect-ratio:1; object-fit:cover; border-radius:18px; display:block; }
-.hero-badge {
-  position:absolute; left:28px; bottom:28px; display:flex; align-items:center; gap:8px;
-  background:rgba(10,16,28,.9); border:1px solid rgba(74,222,128,.28); color:#d9ffe9;
-  border-radius:12px; padding:8px 12px; font-size:12px; font-weight:700;
+.studio { border-radius:16px; overflow:hidden; border:1px solid rgba(148,180,230,.18); background:#0c1424; }
+.studio-top { height:38px; display:flex; align-items:center; justify-content:space-between; padding:0 12px; border-bottom:1px solid rgba(148,180,230,.14); color:#8ea0bb; font-size:11px; font-weight:700; letter-spacing:.04em; }
+.dots { display:flex; gap:5px; }
+.dots i { width:7px; height:7px; border-radius:50%; background:#ff827e; display:block; }
+.dots i:nth-child(2){ background:#f3c76b; } .dots i:nth-child(3){ background:#6bd5a0; }
+.live { color:#b7f5d4; letter-spacing:.12em; font-size:10px; }
+.stage { position:relative; min-height:280px; background:linear-gradient(180deg,#7ec8ff 0%, #b7e4ff 42%, #7dcea0 43%, #3f8f62 100%); overflow:hidden; }
+.cloud { position:absolute; background:#fff; border-radius:20px; opacity:.9; }
+.c1 { width:70px; height:22px; top:28px; left:24px; } .c2 { width:46px; height:16px; top:48px; left:150px; }
+.platform { position:absolute; border-radius:8px; box-shadow:0 8px 0 rgba(0,0,0,.12); }
+.p1 { width:92px; height:18px; left:28px; bottom:78px; background:#f4b942; }
+.p2 { width:70px; height:18px; left:150px; bottom:124px; background:#5aa7ff; }
+.p3 { width:84px; height:18px; right:22px; bottom:86px; background:#ff872e; }
+.avatar-player { position:absolute; left:58px; bottom:96px; width:28px; height:42px; }
+.avatar-player:before { content:""; position:absolute; width:18px; height:18px; border-radius:50%; background:#ffe0b0; left:5px; top:0; }
+.avatar-player:after { content:""; position:absolute; width:22px; height:24px; border-radius:8px; background:#2785ff; left:3px; top:16px; }
+.hud { position:absolute; inset:10px 10px auto 10px; display:flex; justify-content:space-between; gap:8px; }
+.chip { background:rgba(8,16,30,.82); color:white; border-radius:999px; padding:6px 10px; font-size:11px; font-weight:700; border:1px solid rgba(255,255,255,.12); }
+.shop {
+  position:absolute; right:12px; bottom:12px; width:148px;
+  background:rgba(12,20,36,.92); border:1px solid rgba(255,179,111,.35);
+  border-radius:14px; padding:10px; color:white;
 }
+.shop b { display:block; font-size:12px; margin-bottom:8px; }
+.row { display:flex; justify-content:space-between; font-size:11px; color:#d5e2f5; margin-bottom:6px; }
+.row span { color:#ffb36f; font-weight:800; }
+.buy { width:100%; border:none; border-radius:8px; padding:7px; font-weight:800; font-size:11px; color:white; background:linear-gradient(110deg,#2785ff,#ff872e); }
+.made { margin-top:10px; color:#9aabc4; font-size:12px; display:flex; justify-content:space-between; }
 .features { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:18px 0 8px; }
 .feature {
   background:rgba(16,26,44,.72); border:1px solid var(--line); border-radius:16px; padding:16px;
@@ -233,7 +255,7 @@ body:before {
   <section class="hero">
     <div>
       <div class="eyebrow"><i class="fa-solid fa-bolt"></i> IA para Roblox Studio</div>
-      <h2 class="font">Construye tu juego<br><em>en azul y naranja.</em></h2>
+      <h2 class="font">Has de tu idea<br>un juego real en <em>roblox</em></h2>
       <p class="lead">ABX Build escribe scripts, interfaces, mapas y sistemas de Roblox. Conecta el plugin con un código de 5 dígitos y la acción llega a Studio.</p>
       <div class="cta-row">
         <button class="btn btn-primary" type="button" onclick="showConnectModal()"><i class="fa-solid fa-plug"></i> Conectar plugin</button>
@@ -241,8 +263,32 @@ body:before {
       </div>
     </div>
     <div class="hero-card">
-      <img class="hero-logo" id="logo-hero" alt="Logo de ABX Build">
-      <div class="hero-badge"><i class="fa-solid fa-circle" style="color:#4ade80;font-size:8px"></i> Listo para Studio</div>
+      <div class="studio">
+        <div class="studio-top">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span>UI de juego</span>
+          <span class="live">STUDIO</span>
+        </div>
+        <div class="stage">
+          <div class="cloud c1"></div>
+          <div class="cloud c2"></div>
+          <div class="hud">
+            <div class="chip">Monedas 1,250</div>
+            <div class="chip">Nivel 4</div>
+          </div>
+          <div class="platform p1"></div>
+          <div class="platform p2"></div>
+          <div class="platform p3"></div>
+          <div class="avatar-player"></div>
+          <div class="shop">
+            <b>Tienda</b>
+            <div class="row">Espada <span>120</span></div>
+            <div class="row">Poción <span>40</span></div>
+            <button class="buy" type="button" tabindex="-1">Comprar</button>
+          </div>
+        </div>
+      </div>
+      <div class="made"><span>Interfaz hecha con ABX Build</span><span>Obby + tienda</span></div>
     </div>
   </section>
 
@@ -328,7 +374,7 @@ const safeStorage = {
 };
 
 function setLogos() {
-  ["logo-header","logo-hero","logo-prompt"].forEach(id => {
+  ["logo-header","logo-prompt"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.src = LOGO;
   });
