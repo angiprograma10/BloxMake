@@ -364,7 +364,7 @@
 
                 loading.remove();
                 addMessage('ai', data.reply || 'No recibí una respuesta.');
-                if (data.action && ['CREATE_PART', 'CREATE_GUI'].includes(data.action.type)) {
+                if (data.action && ['CREATE_PART', 'CREATE_GUI', 'CREATE_STRUCTURE', 'CREATE_SCRIPT', 'CREATE_SYSTEM'].includes(data.action.type)) {
                     addActionConfirmation(data.action);
                 }
             } catch (error) {
@@ -395,9 +395,14 @@
             title.textContent = 'Acción preparada';
             const description = document.createElement('div');
             description.style.cssText = 'white-space:pre-wrap;line-height:1.5;';
-            description.textContent = action.type === 'CREATE_PART'
-                ? 'Crear una pieza ' + String(action.color || 'blue') + ' de tamaño ' + (Array.isArray(action.size) ? action.size.join(' × ') : '10 × 1 × 10') + '.'
-                : 'Crear una interfaz llamada “' + String(action.title || 'Mi interfaz') + '”.';
+            const descriptions = {
+                CREATE_PART: 'Crear una pieza ' + String(action.color || 'blue') + ' de tamaño ' + (Array.isArray(action.size) ? action.size.join(' × ') : '10 × 1 × 10') + '.',
+                CREATE_GUI: 'Crear una interfaz llamada “' + String(action.title || 'Mi interfaz') + '”.',
+                CREATE_STRUCTURE: 'Crear la estructura “' + String(action.name || 'Estructura') + '” con ' + (Array.isArray(action.parts) ? action.parts.length : 0) + ' piezas.',
+                CREATE_SCRIPT: 'Crear el script “' + String(action.name || 'MiScript') + '” en ' + String(action.location || 'ServerScriptService') + '. Revisa el código en Studio antes de aplicarlo.',
+                CREATE_SYSTEM: 'Instalar el sistema básico: ' + ({ COINS: 'monedas', CHECKPOINTS: 'checkpoints', REBIRTHS: 'rebirths' }[action.system] || String(action.system)) + '.'
+            };
+            description.textContent = descriptions[action.type] || 'Preparar acción para Roblox Studio.';
 
             const button = document.createElement('button');
             button.className = 'btn btn-primary';
