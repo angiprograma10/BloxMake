@@ -900,7 +900,7 @@
 
                 loading.remove();
                 addMessage('ai', data.reply || 'No recibí una respuesta.');
-                if (data.action && ['CREATE_PART', 'CREATE_GUI', 'CREATE_STRUCTURE', 'CREATE_SCRIPT', 'CREATE_SYSTEM'].includes(data.action.type)) {
+                if (data.action && ['CREATE_PART', 'CREATE_GUI', 'CREATE_STRUCTURE', 'CREATE_SCRIPT', 'CREATE_FOLDER', 'CREATE_VALUE', 'CREATE_REMOTE', 'CREATE_OBJECT', 'CREATE_SYSTEM'].includes(data.action.type)) {
                     addActionConfirmation(data.action);
                 }
             } catch (error) {
