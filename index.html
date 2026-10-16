@@ -77,6 +77,59 @@
         }
 
         .btn-primary:hover { box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4); }
+
+        /* ABX Build visual refresh — presentation only */
+        :root { color-scheme: dark; --bg:#080d18; --panel:#101827; --panel-2:#131e30; --line:rgba(148,163,184,.16); --muted:#9aa9c0; --blue:#5b8cff; --violet:#9572ff; }
+        html { scroll-behavior:smooth; }
+        body { background:radial-gradient(ellipse at 14% 0%,rgba(52,91,180,.20),transparent 36%),radial-gradient(ellipse at 90% 18%,rgba(112,66,196,.14),transparent 32%),#080d18; color:#edf3ff; }
+        .header { background:rgba(8,13,24,.82); border-bottom:1px solid var(--line); }
+        .header > div { max-width:1320px!important; min-height:82px; }
+        .brand-mark { box-shadow:0 8px 28px rgba(72,112,255,.28)!important; }
+        .font-display { letter-spacing:-.045em; }
+        .page-wrap { max-width:1240px!important; padding-top:54px!important; }
+        .hero { position:relative; padding:54px 24px 46px; border:1px solid rgba(148,163,184,.13); border-radius:30px; background:linear-gradient(130deg,rgba(18,31,53,.94),rgba(13,20,35,.68)); overflow:hidden; box-shadow:0 28px 90px rgba(0,0,0,.18); }
+        .hero:before { content:"";position:absolute;width:330px;height:330px;right:-100px;top:-180px;border-radius:50%;background:rgba(91,140,255,.15);filter:blur(5px);pointer-events:none; }
+        .hero h2 { font-size:clamp(38px,5.5vw,64px)!important; line-height:1.06; letter-spacing:-.055em; }
+        .hero p { color:#a5b4ca!important; line-height:1.8; }
+        .eyebrow { display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(116,153,255,.28);border-radius:999px;background:rgba(66,105,206,.11);color:#b9ccff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:22px; }
+        .hero-cta { display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:25px; }
+        .hero-cta a { text-decoration:none; }
+        .btn { border-radius:13px; padding:12px 18px; font-weight:650; }
+        .btn-primary { background:linear-gradient(115deg,#4e83ff,#8a5cf6); box-shadow:0 10px 26px rgba(77,115,255,.2); }
+        .btn-primary:hover { box-shadow:0 12px 30px rgba(77,115,255,.34); }
+        .section-heading { display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin:58px 0 22px; }
+        .section-heading h3 { margin:0;font-size:clamp(24px,3vw,34px);letter-spacing:-.04em; }
+        .section-heading p { color:var(--muted);margin:8px 0 0;line-height:1.6; }
+        .project-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px; }
+        .project-card { overflow:hidden;border:1px solid var(--line);border-radius:20px;background:linear-gradient(155deg,rgba(21,32,51,.96),rgba(12,19,32,.96));transition:transform .2s,border-color .2s,box-shadow .2s; }
+        .project-card:hover { transform:translateY(-4px);border-color:rgba(115,151,255,.45);box-shadow:0 18px 42px rgba(0,0,0,.2); }
+        .project-art { min-height:158px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden; }
+        .project-art i { font-size:48px;filter:drop-shadow(0 8px 16px rgba(0,0,0,.22)); }
+        .art-soccer { background:radial-gradient(circle at 70% 25%,rgba(255,255,255,.2),transparent 22%),linear-gradient(135deg,#123e37,#187e65); }
+        .art-choice { background:radial-gradient(circle at 22% 30%,rgba(255,255,255,.18),transparent 22%),linear-gradient(135deg,#292d72,#6852c8); }
+        .art-build { background:radial-gradient(circle at 80% 20%,rgba(255,255,255,.18),transparent 20%),linear-gradient(135deg,#743c21,#d27b37); }
+        .art-soccer:after,.art-choice:after,.art-build:after { content:"";position:absolute;width:180px;height:180px;border:1px solid rgba(255,255,255,.18);border-radius:40px;transform:rotate(28deg); }
+        .project-body { padding:20px; }
+        .project-meta { display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px; }
+        .project-tag { color:#b7c8ff;background:rgba(91,140,255,.12);border:1px solid rgba(91,140,255,.2);border-radius:999px;padding:5px 9px;font-size:11px;font-weight:700; }
+        .project-body h4 { margin:0 0 9px;font-size:18px;letter-spacing:-.025em; }
+        .project-body p { margin:0;color:var(--muted);font-size:13px;line-height:1.7;min-height:44px; }
+        .project-foot { margin-top:18px;padding-top:14px;border-top:1px solid var(--line);display:flex;align-items:center;gap:8px;color:#aab8ce;font-size:12px; }
+        .project-foot i { color:#8daeff; }
+        .feature-strip { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0 4px; }
+        .feature { border:1px solid var(--line);background:rgba(17,27,44,.64);border-radius:15px;padding:16px;display:flex;gap:12px;align-items:flex-start; }
+        .feature-icon { width:36px;height:36px;border-radius:11px;background:rgba(91,140,255,.13);display:grid;place-items:center;color:#9bb7ff;flex-shrink:0; }
+        .feature strong { display:block;font-size:13px;margin-bottom:5px; }
+        .feature span { display:block;color:var(--muted);font-size:12px;line-height:1.5; }
+        #connect-prompt { background:linear-gradient(140deg,rgba(18,31,53,.95),rgba(12,19,32,.95))!important;border-color:var(--line)!important;box-shadow:0 20px 60px rgba(0,0,0,.16); }
+        #chat-area > div { border-color:var(--line)!important;background:rgba(13,20,34,.94)!important; }
+        #chat-messages { background:rgba(7,12,22,.72)!important; }
+        #user-input:focus,#connection-code:focus { outline:2px solid rgba(91,140,255,.7);outline-offset:1px; }
+        .site-footer { margin-top:64px;padding:26px 0 10px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#8190a7;font-size:12px; }
+        .site-footer strong { color:#c5d2e7; }
+        @media(max-width:850px) { .project-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .feature-strip { grid-template-columns:1fr; } .hero { padding:42px 18px 36px; } }
+        @media(max-width:600px) { .header > div { padding:12px 14px!important;gap:10px;flex-wrap:wrap; } .header h1 { font-size:23px!important; } .header #plugin-status { padding:8px 10px!important; } .header #plugin-status-text { font-size:12px!important; } #user-section { padding:8px 10px!important; } .page-wrap { padding:28px 14px!important; } .project-grid { grid-template-columns:1fr; } .project-art { min-height:135px; } .section-heading { margin-top:42px; } .site-footer { margin-top:42px; } }
+
     </style>
 </head>
 <body>
@@ -84,7 +137,7 @@
     <header class="header">
         <div style="max-width: 1200px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 14px;">
-                <div style="width: 52px; height: 52px; background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">
+                <div class="brand-mark" style="width: 52px; height: 52px; background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">
                     <i class="fa-solid fa-cubes" style="color: white; font-size: 26px;"></i>
                 </div>
                 
@@ -112,16 +165,49 @@
         </div>
     </header>
 
-    <div style="max-width: 1000px; margin: 0 auto; padding: 40px 24px;">
+    <main class="page-wrap" style="max-width: 1000px; margin: 0 auto; padding: 40px 24px;">
         <!-- Hero -->
-        <div style="text-align: center; margin-bottom: 48px;">
+        <section class="hero" style="text-align: center; margin-bottom: 30px;">
+            <div class="eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> Tu copiloto creativo para Roblox</div>
             <h2 class="font-display" style="font-size: 52px; margin: 0 0 16px 0; background: linear-gradient(90deg, #e2e8f0, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                 Construye juegos en Roblox<br>con IA
             </h2>
             <p style="font-size: 18px; color: #64748b; max-width: 520px; margin: 0 auto;">
                 Conecta el plugin de ABX Build y deja que la IA cree scripts, UIs y sistemas por ti.
             </p>
+            <div class="hero-cta">
+                <a href="#projects" class="btn btn-primary"><i class="fa-solid fa-gamepad"></i> Explorar proyectos</a>
+                <button onclick="showConnectModal()" class="btn"><i class="fa-solid fa-plug"></i> Conectar Studio</button>
+            </div>
+        </section>
+
+        <div class="feature-strip" aria-label="Características principales">
+            <div class="feature"><div class="feature-icon"><i class="fa-solid fa-cubes"></i></div><div><strong>Construcción creativa</strong><span>Convierte ideas en estructuras y piezas dentro de Roblox Studio.</span></div></div>
+            <div class="feature"><div class="feature-icon"><i class="fa-solid fa-code"></i></div><div><strong>Scripts y sistemas</strong><span>Prepara acciones para revisar y aplicar desde tu plugin.</span></div></div>
+            <div class="feature"><div class="feature-icon"><i class="fa-solid fa-plug"></i></div><div><strong>Conexión con Studio</strong><span>Trabaja desde la web y envía acciones a tu proyecto.</span></div></div>
         </div>
+
+        <!-- Projects showcase -->
+        <section id="projects" aria-labelledby="projects-title">
+            <div class="section-heading">
+                <div><h3 id="projects-title">Proyectos y juegos</h3><p>Ideas de experiencias que puedes desarrollar con creatividad y Roblox Studio.</p></div>
+                <span class="project-tag">LABORATORIO ABX</span>
+            </div>
+            <div class="project-grid">
+                <article class="project-card">
+                    <div class="project-art art-soccer"><i class="fa-solid fa-futbol" style="color:#f1fff9"></i></div>
+                    <div class="project-body"><div class="project-meta"><span class="project-tag">Obby · Fútbol</span><span style="color:#90a0b7;font-size:11px">Concepto</span></div><h4>Tower Soccer</h4><p>Una torre de obstáculos con temática futbolera, pisos variados y retos para llegar hasta la cima.</p><div class="project-foot"><i class="fa-solid fa-lightbulb"></i> Idea en desarrollo</div></div>
+                </article>
+                <article class="project-card">
+                    <div class="project-art art-choice"><i class="fa-solid fa-circle-check" style="color:#f4f2ff"></i></div>
+                    <div class="project-body"><div class="project-meta"><span class="project-tag">Trivia · Reacción</span><span style="color:#90a0b7;font-size:11px">Concepto</span></div><h4>¿Real o falso?</h4><p>Elige la imagen correcta entre dos versiones de una selección de fútbol y supera cada ronda.</p><div class="project-foot"><i class="fa-solid fa-lightbulb"></i> Idea en desarrollo</div></div>
+                </article>
+                <article class="project-card">
+                    <div class="project-art art-build"><i class="fa-solid fa-broom" style="color:#fff5e9"></i></div>
+                    <div class="project-body"><div class="project-meta"><span class="project-tag">Simulador · Tycoon</span><span style="color:#90a0b7;font-size:11px">Concepto</span></div><h4>Limpiar y mejorar</h4><p>Empieza con herramientas sencillas, gana monedas por limpiar y mejora tu espacio poco a poco.</p><div class="project-foot"><i class="fa-solid fa-lightbulb"></i> Idea en desarrollo</div></div>
+                </article>
+            </div>
+        </section>
 
         <!-- Connection Required -->
         <div id="connect-prompt" style="background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; border-radius: 20px; padding: 32px; text-align: center; margin-bottom: 32px; backdrop-filter: blur(10px);">
@@ -157,7 +243,8 @@
                 </div>
             </div>
         </div>
-    </div>
+        <footer class="site-footer"><span><strong>ABX Build</strong> · Creado por Angiblox</span><span>Hecho para dar vida a tus ideas en Roblox.</span></footer>
+    </main>
 
     <!-- Connect Modal -->
     <div id="connect-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px);">
