@@ -446,7 +446,7 @@
 
             // La conexión guardada no se considera activa hasta verificarla con el backend.
             const savedCode = safeStorage.getItem('abxConnectionCode');
-            if (!savedCode || !/^\\d{5}$/.test(savedCode)) return;
+            if (!savedCode || !/^\d{5}$/.test(savedCode)) return;
 
             try {
                 const response = await fetch(BACKEND_URL + '/connect', {
