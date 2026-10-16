@@ -896,7 +896,7 @@
 
                 chatHistory.push({ role: 'user', text: promptText });
                 chatHistory.push({ role: 'model', text: String(data.reply || '') });
-                chatHistory = chatHistory.slice(-10);
+                chatHistory = chatHistory.slice(-20);
 
                 loading.remove();
                 addMessage('ai', data.reply || 'No recibí una respuesta.');
