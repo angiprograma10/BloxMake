@@ -381,13 +381,12 @@ const BACKEND_URL = "https://abx-build-backend.onrender.com";
 const MODELS = [
   { id:"gemini-3.5-flash-lite", name:"Gemini 3.5 Flash-Lite", note:"Rápido y más capaz para programación", price:"$" },
   { id:"gemini-3-flash-preview", name:"Gemini 3 Flash", note:"Scripts y sistemas", price:"$$" },
-  { id:"gemini-3.6-flash", name:"Gemini 3.6 Flash", note:"Más rápido para tareas y programación", price:"Gratis*" },
   { id:"gpt-5.4-mini", name:"GPT-5.4 mini", note:"OpenAI · rápido para programar", price:"$$" },
   { id:"gpt-5.5", name:"GPT-5.5", note:"OpenAI · tareas difíciles y sistemas", price:"$$$" }
 ];
 let isPluginConnected = false;
 let currentConnectionCode = null;
-let selectedModelId = "gemini-3.5-flash-lite";
+let selectedModelId = "gemini-3-flash-preview";
 let chatHistory = [];
 let currentUser = null;
 
@@ -572,9 +571,9 @@ async function initialize() {
   loadUser();
   renderModels();
   let savedModel = safeStorage.getItem("abxModel");
-  // Si el usuario tenía seleccionado Gemini 3.6 Flash, probar el modelo de menor latencia.
-  if (savedModel === "gemini-3.6-flash") {
-    savedModel = "gemini-3.5-flash-lite";
+  // Cambiar las selecciones anteriores de Flash a Gemini 3 Flash Preview para probar otro modelo.
+  if (savedModel === "gemini-3.6-flash" || savedModel === "gemini-3.5-flash-lite") {
+    savedModel = "gemini-3-flash-preview";
     safeStorage.setItem("abxModel", savedModel);
   }
   const found = MODELS.find(m => m.id === savedModel);
