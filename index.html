@@ -511,7 +511,7 @@ async function sendMessage() {
     pending.remove();
     if (data.reply) {
       const providerLabel = data.providerUsed === "openai" ? "OpenAI" : (data.providerUsed === "gemini" ? "Gemini" : "");
-      addMessage("ai", data.reply + (providerLabel ? "\\n\\n— " + providerLabel + " · " + (data.modelUsed || selectedModelId) : ""));
+      addMessage("ai", data.reply + (providerLabel ? "\n\n— " + providerLabel + " · " + (data.modelUsed || selectedModelId) : ""));
       chatHistory.push({ role:"model", text:data.reply });
     } else {
       addMessage("ai", data.error || "No recibí una respuesta.");
