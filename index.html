@@ -213,9 +213,15 @@ body:before {
 .model-option small { display:block; color:var(--muted); margin-top:3px; font-weight:500; }
 .price { color:#ffb36f; font-weight:800; }
 #user-input {
-  flex:1; min-height:52px; max-height:140px; resize:none;
+  flex:1; width:100%; min-height:200px; height:200px; max-height:420px;
+  resize:vertical; overflow-y:auto; align-self:stretch;
   background:#0b1220; color:#f4f7fc; border:1px solid var(--line); border-radius:14px;
-  padding:14px 16px; font:inherit; font-size:14px;
+  padding:16px; font:inherit; font-size:14px; line-height:1.6;
+}
+#user-input::placeholder { color:#8496b1; }
+@media (min-width:901px) {
+  .composer { align-items:stretch; }
+  #user-input { flex-basis:100%; }
 }
 #user-input:focus, #connection-code:focus { outline:2px solid rgba(39,133,255,.65); outline-offset:1px; }
 #send-btn { width:52px; height:52px; justify-content:center; padding:0; border-radius:14px; }
@@ -529,6 +535,7 @@ async function sendMessage() {
   if (!text || !isPluginConnected || !currentConnectionCode) return;
   addMessage("user", text);
   input.value = "";
+  input.style.height = "200px";
   chatHistory.push({ role:"user", text });
   const sendBtn = document.getElementById("send-btn");
   sendBtn.disabled = true;
@@ -628,6 +635,11 @@ document.querySelectorAll(".quick-prompt").forEach(button => {
     input.focus();
     input.dispatchEvent(new Event("input", { bubbles: true }));
   });
+});
+const promptInput = document.getElementById("user-input");
+promptInput.addEventListener("input", () => {
+  promptInput.style.height = "200px";
+  promptInput.style.height = Math.min(promptInput.scrollHeight, 420) + "px";
 });
 document.getElementById("user-input").addEventListener("keydown", e => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
