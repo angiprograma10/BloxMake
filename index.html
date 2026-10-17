@@ -185,6 +185,15 @@ body:before {
   display:flex; gap:10px; align-items:flex-end; padding:14px;
   border-top:1px solid var(--line); background:#0d1626; position:relative;
 }
+.build-mode-toggle {
+  display:flex; align-items:center; gap:9px; width:100%; padding:10px 12px;
+  border:1px solid rgba(255,135,46,.35); border-radius:12px;
+  background:rgba(255,135,46,.08); color:#ffd5b3; font-size:12px; font-weight:700;
+}
+.build-mode-toggle input { width:17px; height:17px; accent-color:var(--orange); }
+.build-mode-toggle span { display:flex; flex-direction:column; gap:3px; }
+.build-mode-toggle small { color:var(--muted); font-size:11px; font-weight:500; line-height:1.4; }
+
 .model-wrap { position:relative; }
 #model-btn {
   min-width:210px; height:52px; justify-content:space-between;
@@ -338,12 +347,19 @@ body:before {
       <div id="chat-messages"></div>
       <div class="build-prompts" aria-label="Prompts de construcción rápida">
         <p class="build-prompts-label">Atajos para construir mejor · pulsa para preparar una petición</p>
+        <button class="quick-prompt" type="button" data-mode="full-game" data-prompt="Crea un juego Roblox completo y pequeño llamado [NOMBRE DEL JUEGO] sobre [IDEA]. Incluye un mapa reconocible, spawn, ciclo principal jugable, UI profesional, recompensas y progreso, scripts de servidor y cliente bien ubicados y todas las dependencias necesarias. Prioriza un MVP funcional y coherente; no crees botones decorativos ni prometas sistemas no implementados.">Juego completo</button>
         <button class="quick-prompt" type="button" data-prompt="Construye una casa moderna de dos pisos en Workspace con base, paredes diferenciadas, puerta, ventanas, techo y detalles. Usa piezas físicas reales, calcula cada posición y tamaño con un origen común, apoya los objetos sobre las superficies y evita volúmenes opacos duplicados o cruces accidentales.">Casa detallada</button>
         <button class="quick-prompt" type="button" data-prompt="Construye una torre obby de fútbol con 8 pisos conectados verticalmente, plataformas y obstáculos variados. Calcula la altura de cada piso, deja espacio suficiente para saltar y crea instancias físicas reales. Evita plataformas encimadas accidentalmente, partes flotantes y caminos bloqueados.">Torre obby</button>
         <button class="quick-prompt" type="button" data-prompt="Crea una interfaz profesional de tienda para Roblox con ScreenGui, panel principal, encabezado, lista de artículos, precios y botones Comprar. Usa CREATE_TREE con instancias reales, tamaños UDim2 explícitos, márgenes consistentes, buen contraste y elementos ordenados; no generes solo un script para dibujarla.">Tienda UI</button>
         <button class="quick-prompt" type="button" data-prompt="Inspecciona primero la selección actual en Roblox Studio y devuelve un diagnóstico breve de piezas duplicadas, objetos flotantes, apoyos incorrectos y tamaños o posiciones incoherentes. No muevas ni elimines nada todavía; espera a que te pida aplicar las correcciones y conserva las uniones intencionales de paredes, suelos y techos.">Revisar construcción</button>
       </div>
       <div class="composer">
+        <label class="build-mode-toggle" for="full-game-mode">
+          <input type="checkbox" id="full-game-mode">
+          <span>Constructor de juego completo desde un prompt
+            <small>Planifica mapa, mecánica principal, interfaz, scripts y dependencias en varias acciones ordenadas. Revisa el plan antes de aplicarlo.</small>
+          </span>
+        </label>
         <div class="model-wrap">
           <button class="btn" id="model-btn" type="button" onclick="toggleModels(event)">
             <span id="model-label">Gemini 3.5 Flash-Lite</span>
@@ -526,6 +542,7 @@ async function sendMessage() {
         code: currentConnectionCode,
         message: text,
         model: selectedModelId,
+        buildMode: document.getElementById("full-game-mode").checked ? "full-game" : "standard",
         // The latest user message is sent in "message" separately.
         // Exclude it from history to avoid feeding it to the model twice.
         history: chatHistory.slice(0, -1).slice(-8)
@@ -604,6 +621,9 @@ async function initialize() {
 document.querySelectorAll(".quick-prompt").forEach(button => {
   button.addEventListener("click", () => {
     const input = document.getElementById("user-input");
+    if (button.dataset.mode === "full-game") {
+      document.getElementById("full-game-mode").checked = true;
+    }
     input.value = button.dataset.prompt || "";
     input.focus();
     input.dispatchEvent(new Event("input", { bubbles: true }));
