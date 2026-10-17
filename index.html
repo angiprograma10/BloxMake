@@ -571,7 +571,12 @@ async function initialize() {
   setLogos();
   loadUser();
   renderModels();
-  const savedModel = safeStorage.getItem("abxModel");
+  let savedModel = safeStorage.getItem("abxModel");
+  // Si el usuario tenía seleccionado Gemini 3.6 Flash, probar el modelo de menor latencia.
+  if (savedModel === "gemini-3.6-flash") {
+    savedModel = "gemini-3.5-flash-lite";
+    safeStorage.setItem("abxModel", savedModel);
+  }
   const found = MODELS.find(m => m.id === savedModel);
   if (found) {
     selectedModelId = found.id;
