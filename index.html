@@ -166,6 +166,21 @@ body:before {
 .avatar {
   width:36px; height:36px; border-radius:12px; object-fit:cover; flex-shrink:0;
 }
+.build-prompts {
+  display:flex; gap:8px; flex-wrap:wrap; padding:12px 14px 0;
+  background:#0d1626; border-top:1px solid rgba(255,255,255,.035);
+}
+.build-prompts-label {
+  width:100%; color:#8fa2bd; font-size:11px; font-weight:800;
+  letter-spacing:.08em; text-transform:uppercase; margin:0 0 1px;
+}
+.quick-prompt {
+  border:1px solid #263852; background:#111d30; color:#c8d8ef;
+  border-radius:999px; padding:7px 11px; font:inherit; font-size:12px;
+  cursor:pointer; transition:background .15s,border-color .15s,transform .15s;
+}
+.quick-prompt:hover { background:#172b46; border-color:#3989ff; transform:translateY(-1px); }
+.quick-prompt:focus-visible { outline:2px solid #3989ff; outline-offset:2px; }
 .composer {
   display:flex; gap:10px; align-items:flex-end; padding:14px;
   border-top:1px solid var(--line); background:#0d1626; position:relative;
@@ -321,6 +336,13 @@ body:before {
   <section id="chat-area">
     <div class="chat-shell">
       <div id="chat-messages"></div>
+      <div class="build-prompts" aria-label="Prompts de construcción rápida">
+        <p class="build-prompts-label">Atajos para construir mejor · pulsa para preparar una petición</p>
+        <button class="quick-prompt" type="button" data-prompt="Construye una casa moderna de dos pisos en Workspace con base, paredes diferenciadas, puerta, ventanas, techo y detalles. Usa piezas físicas reales, calcula cada posición y tamaño con un origen común, apoya los objetos sobre las superficies y evita volúmenes opacos duplicados o cruces accidentales.">Casa detallada</button>
+        <button class="quick-prompt" type="button" data-prompt="Construye una torre obby de fútbol con 8 pisos conectados verticalmente, plataformas y obstáculos variados. Calcula la altura de cada piso, deja espacio suficiente para saltar y crea instancias físicas reales. Evita plataformas encimadas accidentalmente, partes flotantes y caminos bloqueados.">Torre obby</button>
+        <button class="quick-prompt" type="button" data-prompt="Crea una interfaz profesional de tienda para Roblox con ScreenGui, panel principal, encabezado, lista de artículos, precios y botones Comprar. Usa CREATE_TREE con instancias reales, tamaños UDim2 explícitos, márgenes consistentes, buen contraste y elementos ordenados; no generes solo un script para dibujarla.">Tienda UI</button>
+        <button class="quick-prompt" type="button" data-prompt="Inspecciona primero la selección actual en Roblox Studio. Detecta piezas con el mismo volumen, objetos flotantes, apoyos incorrectos y tamaños o posiciones incoherentes. Corrige únicamente los problemas confirmados y conserva las uniones intencionales de paredes, suelos y techos.">Revisar construcción</button>
+      </div>
       <div class="composer">
         <div class="model-wrap">
           <button class="btn" id="model-btn" type="button" onclick="toggleModels(event)">
@@ -560,6 +582,14 @@ async function initialize() {
     addMessage("ai", "Conexión verificada. ¿Qué quieres construir en Roblox Studio?");
   } catch (e) {}
 }
+document.querySelectorAll(".quick-prompt").forEach(button => {
+  button.addEventListener("click", () => {
+    const input = document.getElementById("user-input");
+    input.value = button.dataset.prompt || "";
+    input.focus();
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+});
 document.getElementById("user-input").addEventListener("keydown", e => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 });
