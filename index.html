@@ -526,11 +526,17 @@ async function sendMessage() {
         code: currentConnectionCode,
         message: text,
         model: selectedModelId,
-        history: chatHistory.slice(-8)
+        // The latest user message is sent in "message" separately.
+        // Exclude it from history to avoid feeding it to the model twice.
+        history: chatHistory.slice(0, -1).slice(-8)
       })
     });
     const data = await res.json();
     pending.remove();
+    if (!res.ok || data.ok === false) {
+      addMessage("ai", data.error || "El servidor no pudo procesar la solicitud.");
+      return;
+    }
     if (data.reply) {
       const providerLabel = data.providerUsed === "openai" ? "OpenAI" : (data.providerUsed === "gemini" ? "Gemini" : "");
       addMessage("ai", data.reply + (providerLabel ? "\n\n— " + providerLabel + " · " + (data.modelUsed || selectedModelId) : ""));
@@ -539,16 +545,24 @@ async function sendMessage() {
       addMessage("ai", data.error || "No recibí una respuesta.");
     }
     if (data.action) {
-      await fetch(BACKEND_URL + "/send", {
+      const queueRes = await fetch(BACKEND_URL + "/send", {
         method:"POST",
         headers:{ "Content-Type":"application/json" },
         body: JSON.stringify({ code: currentConnectionCode, script: JSON.stringify(data.action) })
       });
-      addMessage("ai", "Acción enviada al plugin. Revísala en Roblox Studio.");
+      const queueData = await queueRes.json().catch(() => ({}));
+      if (!queueRes.ok || !queueData.ok) {
+        addMessage("ai", queueData.error || "No se pudo poner la acción en la cola del plugin.");
+      } else {
+        const count = Number(queueData.queuedActions || data.planCount || 1);
+        addMessage("ai", count > 1
+          ? "Plan encolado: " + count + " acciones. Mantén Roblox Studio abierto y revisa el resultado de cada paso."
+          : "Acción encolada para el plugin. Mantén Roblox Studio abierto y revisa el resultado.");
+      }
     }
   } catch (e) {
-    if (pending) pending.remove();
-    addMessage("ai", "Error al contactar el servidor. Intenta de nuevo.");
+    if (pending && pending.isConnected) pending.remove();
+    addMessage("ai", "Error de conexión. Comprueba que el backend esté disponible y que el plugin siga conectado; después inténtalo de nuevo.");
   } finally {
     sendBtn.disabled = false;
   }
