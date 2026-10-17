@@ -380,7 +380,7 @@ const LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhm
 const BACKEND_URL = "https://abx-build-backend.onrender.com";
 const MODELS = [
   { id:"gemini-3.5-flash-lite", name:"Gemini 3.5 Flash-Lite", note:"Rápido y económico", price:"$" },
-  { id:"gemini-3.1-flash-lite", name:"Gemini 3.1 Flash-Lite", note:"Ligero y de baja latencia", price:"$" },
+  { id:"gemini-3.5-flash", name:"Gemini 3.5 Flash", note:"Más capaz para programación y agentes", price:"$" },
   { id:"gemini-3-flash-preview", name:"Gemini 3 Flash", note:"Para scripts y sistemas", price:"$" },
   { id:"gpt-5.4-mini", name:"GPT-5.4 mini", note:"OpenAI · rápido para programar", price:"$$" },
   { id:"gpt-5.5", name:"GPT-5.5", note:"OpenAI · tareas difíciles y sistemas", price:"$$$" }
@@ -573,7 +573,7 @@ async function initialize() {
   renderModels();
   let savedModel = safeStorage.getItem("abxModel");
   // Cambiar las selecciones anteriores de Flash a Gemini 3 Flash Preview para probar otro modelo.
-  if (savedModel === "gemini-3.6-flash" || savedModel === "gemini-3.5-flash-lite") {
+  if (savedModel === "gemini-3.6-flash" || savedModel === "gemini-3.5-flash-lite" || savedModel === "gemini-3.1-flash-lite") {
     savedModel = "gemini-3-flash-preview";
     safeStorage.setItem("abxModel", savedModel);
   }
