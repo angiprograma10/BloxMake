@@ -403,7 +403,11 @@ const MODELS = [
   { id:"gpt-5.4-nano", name:"GPT-5.4 nano", note:"OpenAI · económico para tareas rápidas", price:"$" },
   { id:"gpt-5.4-mini", name:"GPT-5.4 mini", note:"OpenAI · mejor equilibrio para código", price:"$" },
   { id:"deepseek-flash", name:"DeepSeek V4.1 Flash", note:"DeepSeek · rápido y de bajo costo", price:"$" },
-  { id:"deepseek-v4-pro", name:"DeepSeek V4 Pro (redirigido a Flash)", note:"DeepSeek · alias compatible; usa Flash actualmente", price:"$" }
+  { id:"deepseek-v4-pro", name:"DeepSeek V4 Pro (redirigido a Flash)", note:"DeepSeek · alias compatible; usa Flash actualmente", price:"$" },
+  { id:"groq/openai/gpt-oss-20b", name:"Groq · GPT-OSS 20B", note:"Groq · rápido para tareas generales", price:"Gratis limitado" },
+  { id:"groq/openai/gpt-oss-120b", name:"Groq · GPT-OSS 120B", note:"Groq · razonamiento y código", price:"Gratis limitado" },
+  { id:"mistral/ministral-3b-2512", name:"Mistral · Ministral 3B", note:"Mistral · ligero para tareas sencillas", price:"Gratis limitado" },
+  { id:"mistral/ministral-8b-2512", name:"Mistral · Ministral 8B", note:"Mistral · equilibrio para código", price:"Gratis limitado" }
 ];
 let isPluginConnected = false;
 let currentConnectionCode = null;
