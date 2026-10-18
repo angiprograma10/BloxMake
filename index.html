@@ -397,15 +397,20 @@ const LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhm
 const BACKEND_URL = "https://abx-build-backend.onrender.com";
 let fullGameModeRequested = false;
 const MODELS = [
-  { id:"gemini-3.5-flash-lite", name:"Gemini 3.5 Flash-Lite", note:"Rápido y económico", price:"$" },
-  { id:"gemini-3.5-flash", name:"Gemini 3.5 Flash", note:"Más capaz para programación y agentes", price:"$" },
-  { id:"gemini-3-flash-preview", name:"Gemini 3 Flash", note:"Para scripts y sistemas", price:"$" },
-  { id:"gpt-5.4-mini", name:"GPT-5.4 mini", note:"OpenAI · rápido para programar", price:"$$" },
-  { id:"gpt-5.5", name:"GPT-5.5", note:"OpenAI · tareas difíciles y sistemas", price:"$$$" }
+  { id:"gemini-3.5-flash-lite", name:"Gemini Flash-Lite", note:"Google · rápido para iterar y tareas sencillas", price:"$" },
+  { id:"gemini-3.5-flash", name:"Gemini Flash", note:"Google · equilibrio entre velocidad y razonamiento", price:"$" },
+  { id:"gemini-3-flash-preview", name:"Gemini 3 Flash", note:"Google · construcción y scripts", price:"$" },
+  { id:"gpt-5.4-mini", name:"GPT-5.4 mini", note:"OpenAI · rápido y eficiente", price:"$" },
+  { id:"gpt-5.5", name:"GPT-5.5", note:"OpenAI · tareas complejas y programación", price:"$$" },
+  { id:"claude-sonnet-5-5", name:"Claude Sonnet 5.5", note:"Anthropic · programación y trabajo diario", price:"$$" },
+  { id:"claude-opus-5-5", name:"Claude Opus 5.5", note:"Anthropic · problemas difíciles y planificación", price:"$$" },
+  { id:"claude-haiku-5-5", name:"Claude Haiku 5.5", note:"Anthropic · respuestas rápidas", price:"$" },
+  { id:"deepseek-flash", name:"DeepSeek Flash", note:"DeepSeek · rápido para iterar", price:"$" },
+  { id:"deepseek-v4-pro", name:"DeepSeek V4 Pro", note:"DeepSeek · razonamiento y código", price:"$$" }
 ];
 let isPluginConnected = false;
 let currentConnectionCode = null;
-let selectedModelId = "gemini-3-flash-preview";
+let selectedModelId = "gpt-5.5";
 let chatHistory = [];
 let currentUser = null;
 
@@ -592,9 +597,10 @@ async function initialize() {
   loadUser();
   renderModels();
   let savedModel = safeStorage.getItem("abxModel");
-  // Cambiar las selecciones anteriores de Flash a Gemini 3 Flash Preview para probar otro modelo.
-  if (savedModel === "gemini-3.6-flash" || savedModel === "gemini-3.5-flash-lite" || savedModel === "gemini-3.1-flash-lite") {
-    savedModel = "gemini-3-flash-preview";
+  // Normalizar selecciones antiguas que ya no estén disponibles en el catálogo.
+  const modelIds = new Set(MODELS.map(model => model.id));
+  if (savedModel && !modelIds.has(savedModel)) {
+    savedModel = "gpt-5.5";
     safeStorage.setItem("abxModel", savedModel);
   }
   const found = MODELS.find(m => m.id === savedModel);
