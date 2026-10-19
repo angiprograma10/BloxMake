@@ -363,7 +363,7 @@ body:before {
       <div class="composer">
         <div class="model-wrap">
           <button class="btn" id="model-btn" type="button" onclick="toggleModels(event)">
-            <span id="model-label">GPT-5.5</span>
+            <span id="model-label">Gemini Flash-Lite</span>
             <i class="fa-solid fa-chevron-up"></i>
           </button>
           <div id="model-popover"></div>
@@ -400,10 +400,6 @@ const MODELS = [
   { id:"gemini-3.5-flash-lite", name:"Gemini Flash-Lite", note:"Google · rápido para iterar y tareas sencillas", price:"$" },
   { id:"gemini-3.5-flash", name:"Gemini Flash", note:"Google · equilibrio entre velocidad y razonamiento", price:"$" },
   { id:"gemini-3-flash-preview", name:"Gemini 3 Flash", note:"Google · construcción y scripts", price:"$" },
-  { id:"gpt-5.4-nano", name:"GPT-5.4 nano", note:"OpenAI · económico para tareas rápidas", price:"$" },
-  { id:"gpt-5.4-mini", name:"GPT-5.4 mini", note:"OpenAI · mejor equilibrio para código", price:"$" },
-  { id:"deepseek-flash", name:"DeepSeek V4.1 Flash", note:"DeepSeek · rápido y de bajo costo", price:"$" },
-  { id:"deepseek-v4-pro", name:"DeepSeek V4 Pro (redirigido a Flash)", note:"DeepSeek · alias compatible; usa Flash actualmente", price:"$" },
   { id:"groq/openai/gpt-oss-20b", name:"Groq · GPT-OSS 20B", note:"Groq · rápido para tareas generales", price:"Gratis limitado" },
   { id:"groq/openai/gpt-oss-120b", name:"Groq · GPT-OSS 120B", note:"Groq · razonamiento y código", price:"Gratis limitado" },
   { id:"mistral/ministral-3b-2512", name:"Mistral · Ministral 3B", note:"Mistral · ligero para tareas sencillas", price:"Gratis limitado" },
@@ -411,7 +407,7 @@ const MODELS = [
 ];
 let isPluginConnected = false;
 let currentConnectionCode = null;
-let selectedModelId = "gpt-5.4-mini";
+let selectedModelId = "gemini-3.5-flash-lite";
 let chatHistory = [];
 let currentUser = null;
 
@@ -564,7 +560,8 @@ async function sendMessage() {
       return;
     }
     if (data.reply) {
-      const providerLabel = data.providerUsed === "openai" ? "OpenAI" : (data.providerUsed === "gemini" ? "Gemini" : "");
+      const providerNames = { gemini:"Gemini", groq:"Groq", mistral:"Mistral" };
+      const providerLabel = providerNames[data.providerUsed] || "";
       addMessage("ai", data.reply + (providerLabel ? "\n\n— " + providerLabel + " · " + (data.modelUsed || selectedModelId) : ""));
       chatHistory.push({ role:"model", text:data.reply });
     } else {
@@ -601,7 +598,7 @@ async function initialize() {
   // Normalizar selecciones antiguas que ya no estén disponibles en el catálogo.
   const modelIds = new Set(MODELS.map(model => model.id));
   if (savedModel && !modelIds.has(savedModel)) {
-    savedModel = "gpt-5.4-mini";
+    savedModel = "gemini-3.5-flash-lite";
     safeStorage.setItem("abxModel", savedModel);
   }
   const found = MODELS.find(m => m.id === savedModel);
