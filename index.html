@@ -269,6 +269,10 @@ body:before {
       </div>
     </a>
     <div class="header-actions">
+      <div class="pill" id="token-counter" role="status" aria-live="polite" title="10 tokens diarios; se consume uno cuando ABX Build entrega una respuesta válida.">
+        <i class="fa-solid fa-bolt" style="color:#ffad57"></i>
+        <span id="token-count">10/10 tokens</span>
+      </div>
       <button class="pill" id="plugin-status" type="button" onclick="showConnectModal()">
         <i class="fa-solid fa-plug" id="plug-icon" style="color:#f87171"></i>
         <span id="plugin-status-text">Plugin desconectado</span>
@@ -408,6 +412,8 @@ let currentConnectionCode = null;
 let selectedModelId = "gemini-3.5-flash-lite";
 let chatHistory = [];
 let currentUser = null;
+let dailyUsage = { dailyLimit: 10, used: 0, remaining: 10 };
+let clientId = "";
 
 const safeStorage = {
   data: {},
@@ -415,6 +421,45 @@ const safeStorage = {
   setItem(key, value) { try { localStorage.setItem(key, value); } catch (e) { this.data[key] = value; } }
 };
 
+function getOrCreateClientId() {
+  let id = safeStorage.getItem("abxClientId");
+  if (!id || !/^[a-zA-Z0-9_-]{16,80}$/.test(id)) {
+    id = (typeof crypto !== "undefined" && crypto.randomUUID)
+      ? crypto.randomUUID().replace(/-/g, "")
+      : "abx" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    safeStorage.setItem("abxClientId", id);
+  }
+  return id;
+}
+function renderTokenUsage(usage) {
+  if (usage && Number.isFinite(Number(usage.remaining))) dailyUsage = usage;
+  const count = document.getElementById("token-count");
+  const counter = document.getElementById("token-counter");
+  if (!count || !counter) return;
+  count.textContent = dailyUsage.remaining + "/" + dailyUsage.dailyLimit + " tokens";
+  counter.title = dailyUsage.used + " usados hoy. Se renuevan diariamente.";
+  counter.style.borderColor = dailyUsage.remaining <= 2 ? "rgba(255,135,46,.65)" : "";
+  const send = document.getElementById("send-btn");
+  if (send && dailyUsage.remaining <= 0) {
+    send.title = "Has usado tus 10 tokens de hoy.";
+  } else if (send) {
+    send.title = "Enviar petición (consume 1 token si la IA entrega un resultado válido)";
+  }
+}
+async function refreshTokenUsage() {
+  if (!clientId) return;
+  try {
+    const res = await fetch(BACKEND_URL + "/usage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ clientId })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) renderTokenUsage(data.usage);
+  } catch (e) {
+    // El contador local sigue visible si el backend está temporalmente desconectado.
+  }
+}
 function setLogos() {
   ["logo-header","logo-prompt"].forEach(id => {
     const el = document.getElementById(id);
@@ -529,6 +574,10 @@ async function sendMessage() {
   const input = document.getElementById("user-input");
   const text = input.value.trim();
   if (!text || !isPluginConnected || !currentConnectionCode) return;
+  if (dailyUsage.remaining <= 0) {
+    addMessage("ai", "Ya usaste tus 10 tokens de hoy. Vuelve mañana para recibir otros 10 tokens.");
+    return;
+  }
   addMessage("user", text);
   input.value = "";
   input.style.height = "200px";
@@ -543,6 +592,7 @@ async function sendMessage() {
       headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({
         code: currentConnectionCode,
+        clientId,
         message: text,
         model: selectedModelId,
         buildMode: fullGameModeRequested ? "full-game" : "standard",
@@ -554,9 +604,11 @@ async function sendMessage() {
     const data = await res.json();
     pending.remove();
     if (!res.ok || data.ok === false) {
+      if (data.usage) renderTokenUsage(data.usage);
       addMessage("ai", data.error || "El servidor no pudo procesar la solicitud.");
       return;
     }
+    if (data.usage) renderTokenUsage(data.usage);
     if (data.reply) {
       const providerNames = { gemini:"Gemini", groq:"Groq", mistral:"Mistral" };
       const providerLabel = providerNames[data.providerUsed] || "";
@@ -590,6 +642,9 @@ async function sendMessage() {
 }
 async function initialize() {
   setLogos();
+  clientId = getOrCreateClientId();
+  renderTokenUsage(dailyUsage);
+  refreshTokenUsage();
   loadUser();
   renderModels();
   let savedModel = safeStorage.getItem("abxModel");
