@@ -271,9 +271,9 @@ body:before {
       </div>
     </a>
     <div class="header-actions">
-      <div class="pill" id="token-counter" role="status" aria-live="polite" title="10 tokens diarios; se consume uno cuando ABX Build entrega una respuesta válida.">
+      <div class="pill" id="token-counter" role="status" aria-live="polite" title="Los modelos gratis no consumen tokens premium. Los modelos PRO y ULTRA consumen tokens al responder.">
         <i class="fa-solid fa-bolt" style="color:#ffad57"></i>
-        <span id="token-count">10/10 tokens</span>
+        <span id="token-count">10/10 tokens premium</span>
       </div>
       <button class="pill" id="plugin-status" type="button" onclick="showConnectModal()">
         <i class="fa-solid fa-plug" id="plug-icon" style="color:#f87171"></i>
@@ -403,13 +403,15 @@ const LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhm
 const BACKEND_URL = "https://abx-build-backend.onrender.com";
 let fullGameModeRequested = false;
 const MODELS = [
-  { id:"gemini-3.5-flash-lite", provider:"gemini", name:"Gemini Flash-Lite · Rápido", note:"Tareas pequeñas y cambios directos", price:"Gratis / básico" },
-  { id:"gemini-3.8-flash", provider:"gemini", name:"Gemini 3.8 Flash · Constructor", note:"Construcción 3D, UI y sistemas conectados", price:"1 token" },
-  { id:"gemini-3.1-pro-preview", provider:"gemini", name:"Gemini 3.1 Pro · Proyectos complejos", note:"Arquitectura, reparación y tareas de varios pasos", price:"2 tokens" }
+  { id:"gemini-3.1-flash-lite", provider:"gemini", name:"Gemini 3.1 Flash-Lite · Gratis", note:"Preguntas rápidas y cambios pequeños", price:"GRATIS", tier:"free" },
+  { id:"gemini-3.5-flash-lite", provider:"gemini", name:"Gemini 3.5 Flash-Lite · Gratis", note:"Scripts y mejoras sencillas con rapidez", price:"GRATIS", tier:"free" },
+  { id:"gemini-3.6-flash", provider:"gemini", name:"Gemini 3.6 Flash · Gratis", note:"Construcción general de UI, piezas y sistemas", price:"GRATIS", tier:"free" },
+  { id:"gemini-3.8-flash", provider:"gemini", name:"Gemini 3.8 Flash · PRO", note:"Constructor avanzado para mapas, UI y sistemas conectados", price:"2 tokens", tier:"paid" },
+  { id:"gemini-4-argon", provider:"gemini", name:"Gemini 4 Argon · ULTRA", note:"Razonamiento avanzado para proyectos complejos", price:"3 tokens", tier:"paid" }
 ];
 let isPluginConnected = false;
 let currentConnectionCode = null;
-let selectedModelId = "gemini-3.8-flash";
+let selectedModelId = "gemini-3.6-flash";
 let chatHistory = [];
 let currentUser = null;
 let dailyUsage = { dailyLimit: 10, used: 0, remaining: 10 };
