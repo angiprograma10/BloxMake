@@ -682,7 +682,12 @@ async function initialize() {
     savedModel = "gemini-3.5-flash-lite";
     safeStorage.setItem("abxModel", savedModel);
   }
-  const found = MODELS.find(m => m.id === savedModel);
+  let found = MODELS.find(m => m.id === savedModel);
+  if (configuredProviders && (!found || !configuredProviders[found.provider])) {
+    found = MODELS.find(model => configuredProviders[model.provider]) || MODELS[0];
+    savedModel = found.id;
+    safeStorage.setItem("abxModel", savedModel);
+  }
   if (found) {
     selectedModelId = found.id;
     document.getElementById("model-label").textContent = found.name;
