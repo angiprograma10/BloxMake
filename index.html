@@ -209,7 +209,9 @@ body:before {
   width:100%; text-align:left; background:transparent; color:#e8eef8; border:1px solid transparent;
   border-radius:12px; padding:10px 12px; cursor:pointer; display:flex; justify-content:space-between; gap:10px;
 }
-.model-option:hover, .model-option.active { background:rgba(39,133,255,.12); border-color:rgba(39,133,255,.28); }
+.model-option:hover:not(:disabled), .model-option.active { background:rgba(39,133,255,.12); border-color:rgba(39,133,255,.28); }
+.model-option:disabled, .model-option.unavailable { opacity:.52; cursor:not-allowed; }
+.model-option:disabled .price { color:#8b95a7; }
 .model-option small { display:block; color:var(--muted); margin-top:3px; font-weight:500; }
 .price { color:#ffb36f; font-weight:800; }
 #user-input {
@@ -401,11 +403,11 @@ const LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhm
 const BACKEND_URL = "https://abx-build-backend.onrender.com";
 let fullGameModeRequested = false;
 const MODELS = [
-  { id:"gemini-3.5-flash-lite", name:"1 · Gemini Flash-Lite", note:"Más rápido · tareas pequeñas y cambios directos", price:"$" },
-  { id:"gemini-3.5-flash", name:"2 · Gemini Flash", note:"Más análisis · scripts y sistemas conectados", price:"$" },
-  { id:"gemini-3-flash-preview", name:"3 · Gemini 3 Flash", note:"Planifica construcción, UI y dependencias", price:"$" },
-  { id:"mistral/ministral-14b-2512", name:"4 · Mistral · Experto", note:"Arquitectura, seguridad y rendimiento", price:"$" },
-  { id:"groq/openai/gpt-oss-120b", name:"5 · Groq · GPT-OSS 120B · Máximo", note:"Auditoría rigurosa y sistemas completos", price:"$" }
+  { id:"gemini-3.5-flash-lite", provider:"gemini", name:"1 · Gemini Flash-Lite", note:"Rápido · tareas pequeñas y cambios directos", price:"1 token" },
+  { id:"gemini-3.5-flash", provider:"gemini", name:"2 · Gemini Flash", note:"Más análisis · scripts y sistemas conectados", price:"1 token" },
+  { id:"gemini-3-flash-preview", provider:"gemini", name:"3 · Gemini 3 Flash", note:"Planifica construcción, UI y dependencias", price:"1 token" },
+  { id:"mistral/ministral-14b-2512", provider:"mistral", name:"4 · Mistral · Experto", note:"Arquitectura, seguridad y rendimiento", price:"1 token" },
+  { id:"groq/openai/gpt-oss-120b", provider:"groq", name:"5 · Groq · GPT-OSS 120B · Máximo", note:"Análisis avanzado y sistemas completos", price:"1 token" }
 ];
 let isPluginConnected = false;
 let currentConnectionCode = null;
@@ -414,6 +416,7 @@ let chatHistory = [];
 let currentUser = null;
 let dailyUsage = { dailyLimit: 10, used: 0, remaining: 10 };
 let clientId = "";
+let configuredProviders = null;
 
 const safeStorage = {
   data: {},
@@ -540,23 +543,47 @@ function addMessage(role, text) {
   container.appendChild(row);
   container.scrollTop = container.scrollHeight;
 }
+async function refreshModelAvailability() {
+  try {
+    const response = await fetch(BACKEND_URL + "/");
+    const data = await response.json();
+    if (response.ok && data.ok && data.providers) {
+      configuredProviders = data.providers;
+      const current = MODELS.find(model => model.id === selectedModelId);
+      if (current && !configuredProviders[current.provider]) {
+        const fallback = MODELS.find(model => configuredProviders[model.provider]);
+        if (fallback) {
+          selectedModelId = fallback.id;
+          safeStorage.setItem("abxModel", selectedModelId);
+          document.getElementById("model-label").textContent = fallback.name;
+        }
+      }
+      renderModels();
+    }
+  } catch (e) {
+    // Si el backend no responde, conserva el selector y muestra el error al enviar.
+  }
+}
 function renderModels() {
   const pop = document.getElementById("model-popover");
   pop.textContent = "";
   MODELS.forEach(model => {
+    const available = configuredProviders === null || configuredProviders[model.provider] === true;
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "model-option" + (model.id === selectedModelId ? " active" : "");
+    btn.disabled = !available;
+    btn.className = "model-option" + (model.id === selectedModelId ? " active" : "") + (!available ? " unavailable" : "");
     const left = document.createElement("span");
     left.textContent = model.name;
     const note = document.createElement("small");
-    note.textContent = model.note;
+    note.textContent = !available ? "No configurado en el backend de ABX Build" : model.note;
     left.appendChild(note);
     const price = document.createElement("span");
     price.className = "price";
     price.textContent = model.price;
     btn.append(left, price);
     btn.addEventListener("click", () => {
+      if (!available) return;
       selectedModelId = model.id;
       document.getElementById("model-label").textContent = model.name;
       safeStorage.setItem("abxModel", model.id);
@@ -647,6 +674,7 @@ async function initialize() {
   refreshTokenUsage();
   loadUser();
   renderModels();
+  await refreshModelAvailability();
   let savedModel = safeStorage.getItem("abxModel");
   // Normalizar selecciones antiguas que ya no estén disponibles en el catálogo.
   const modelIds = new Set(MODELS.map(model => model.id));
