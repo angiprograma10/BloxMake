@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ABX Build • IA para Roblox Studio</title>
+<title>MEGA • IA para Roblox Studio</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
@@ -264,9 +264,9 @@ body:before {
 <header class="header">
   <div class="header-inner">
     <a class="brand" href="#top">
-      <img class="logo" id="logo-header" alt="Logo ABX Build">
+      <img class="logo" id="logo-header" alt="Logo MEGA">
       <div>
-        <h1 class="font">ABX <span>Build</span></h1>
+        <h1 class="font">MEGA</h1>
         <small>Creado por el youtuber y desarrollador <strong>Angiblox</strong></small>
       </div>
     </a>
@@ -292,7 +292,7 @@ body:before {
     <div>
       <div class="eyebrow"><i class="fa-solid fa-bolt"></i> IA para Roblox Studio</div>
       <h2 class="font">Has de tu idea<br>un juego real en <em>roblox</em></h2>
-      <p class="lead">ABX Build escribe scripts, interfaces, mapas y sistemas de Roblox. Conecta el plugin con un código de 5 dígitos y la acción llega a Studio.</p>
+      <p class="lead">MEGA crea scripts, interfaces, mapas y sistemas de Roblox. Conecta el plugin con un código de 5 dígitos y la acción llega a Studio.</p>
       <div class="cta-row">
         <button class="btn btn-primary" type="button" onclick="showConnectModal()"><i class="fa-solid fa-plug"></i> Conectar plugin</button>
         <button class="btn btn-ghost" type="button" onclick="document.getElementById('ejemplos').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-layer-group"></i> Ver qué puede crear</button>
@@ -324,7 +324,7 @@ body:before {
           </div>
         </div>
       </div>
-      <div class="made"><span>Interfaz hecha con ABX Build</span><span>Obby + tienda</span></div>
+      <div class="made"><span>Interfaz hecha con MEGA</span><span>Obby + tienda</span></div>
     </div>
   </section>
 
@@ -333,7 +333,7 @@ body:before {
     <div class="feature"><i class="fa-solid fa-window-maximize"></i><div><strong>Interfaces</strong><span>Menús, tiendas, HUDs y botones con el estilo de tu juego.</span></div></div>
     <div class="feature"><i class="fa-solid fa-cubes"></i><div><strong>Sistemas</strong><span>Monedas, checkpoints, tycoons, obbies e inventarios.</span></div></div>
     <div class="feature"><i class="fa-solid fa-plug-circle-check"></i><div><strong>Plugin real</strong><span>El código de 5 dígitos une esta web con Roblox Studio.</span></div></div>
-    <div class="feature"><i class="fa-solid fa-wand-magic-sparkles"></i><div><strong>Juego completo con IA</strong><span>Describe tu idea y ABX Build prepara el mapa, la mecánica, la interfaz y los scripts por etapas.</span></div></div>
+    <div class="feature"><i class="fa-solid fa-wand-magic-sparkles"></i><div><strong>Juego completo con IA</strong><span>Describe tu idea y MEGA prepara el mapa, la mecánica, la interfaz y los scripts por etapas.</span></div></div>
   </section>
 
   <div class="section-title" id="ejemplos">
@@ -374,14 +374,14 @@ body:before {
           </button>
           <div id="model-popover"></div>
         </div>
-        <textarea id="user-input" rows="2" placeholder="Dile a ABX Build qué quieres crear o arreglar..."></textarea>
+        <textarea id="user-input" rows="2" placeholder="Dile a MEGA qué quieres crear o arreglar..."></textarea>
         <button class="btn btn-primary" id="send-btn" type="button" onclick="sendMessage()" aria-label="Enviar"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
     </div>
   </section>
 
   <footer class="site-footer">
-    <div><strong>ABX Build</strong> · Creado por Angiblox</div>
+    <div><strong>MEGA</strong> · Creado por Angiblox</div>
     <div>Plugin de Roblox Studio · Código de 5 dígitos</div>
   </footer>
 </main>
@@ -576,7 +576,7 @@ function renderModels() {
     const left = document.createElement("span");
     left.textContent = model.name;
     const note = document.createElement("small");
-    note.textContent = !available ? "No configurado en el backend de ABX Build" : model.note;
+    note.textContent = !available ? "No configurado en el backend de MEGA" : model.note;
     left.appendChild(note);
     const price = document.createElement("span");
     price.className = "price";
@@ -611,7 +611,7 @@ async function sendMessage() {
   chatHistory.push({ role:"user", text });
   const sendBtn = document.getElementById("send-btn");
   sendBtn.disabled = true;
-  addMessage("ai", "ABX Build está pensando...");
+  addMessage("ai", "MEGA está pensando...");
   const pending = document.getElementById("chat-messages").lastElementChild;
   try {
     const res = await fetch(BACKEND_URL + "/chat", {
