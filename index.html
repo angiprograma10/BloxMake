@@ -388,7 +388,7 @@ body:before {
       <div class="composer">
         <div class="model-wrap">
           <button class="btn" id="model-btn" type="button" onclick="toggleModels(event)">
-            <span id="model-label">MEGA DIRECTOR</span>
+            <span id="model-label">MEGA SCRIPTING</span>
             <i class="fa-solid fa-chevron-up"></i>
           </button>
           <div id="model-popover"></div>
@@ -422,16 +422,15 @@ const LOGO = "logo-mega.webp?v=3";
 const BACKEND_URL = "https://abx-build-backend.onrender.com";
 let fullGameModeRequested = false;
 const MODELS = [
-  { id:"mega-director", provider:"mega", name:"MEGA DIRECTOR", note:"Coordina MEGA BUILD, SCRIPTING, UI, FX y GAMEPLAY. El adaptador especializado se entrenará por separado.", price:"PROPIO", tier:"mega" },
-  { id:"mega-build", provider:"mega", name:"MEGA BUILD", note:"Especialista en construcción física 3D. Adaptador LoRA propio pendiente.", price:"PROPIO", tier:"mega" },
-  { id:"mega-scripting", provider:"mega", name:"MEGA SCRIPTING", note:"Especialista en Luau, scripts y eventos. Adaptador LoRA propio pendiente.", price:"PROPIO", tier:"mega" },
-  { id:"mega-ui", provider:"mega", name:"MEGA UI", note:"Especialista en interfaces y experiencia visual. Adaptador LoRA propio pendiente.", price:"PROPIO", tier:"mega" },
-  { id:"mega-fx", provider:"mega", name:"MEGA FX", note:"Especialista en efectos visuales 3D e iluminación. Adaptador LoRA propio pendiente.", price:"PROPIO", tier:"mega" },
-  { id:"mega-gameplay", provider:"mega", name:"MEGA GAMEPLAY", note:"Especialista en mecánicas y progresión. Adaptador LoRA propio pendiente.", price:"PROPIO", tier:"mega" },
+  { id:"mega-scripting", provider:"mega", name:"MEGA SCRIPTING", note:"Luau, arquitectura cliente-servidor, sistemas y depuración.", price:"MEGA", tier:"mega" },
+  { id:"mega-build", provider:"mega", name:"MEGA BUILD", note:"Construcción 3D, geometría, proporciones y composición espacial.", price:"MEGA", tier:"mega" },
+  { id:"mega-fx", provider:"mega", name:"MEGA VFX", note:"Iluminación, partículas, ambientes y efectos visuales.", price:"MEGA", tier:"mega" },
+  { id:"mega-ui", provider:"mega", name:"MEGA UI", note:"Interfaces, jerarquía visual, diseño y experiencia de usuario.", price:"MEGA", tier:"mega" },
+  { id:"mega-gameplay", provider:"mega", name:"MEGA JUEGO", note:"Mecánicas, progresión, reglas y sistemas jugables.", price:"MEGA", tier:"mega" }
 ];
 let isPluginConnected = false;
 let currentConnectionCode = null;
-let selectedModelId = "mega-director";
+let selectedModelId = "mega-scripting";
 function dailyTokenCostForModel() {
   return 0;
 }
@@ -594,24 +593,23 @@ function renderModels() {
   const pop = document.getElementById("model-popover");
   pop.textContent = "";
   MODELS.forEach(model => {
-    const available = configuredProviders === null || configuredProviders[model.provider] === true;
+    const inferenceReady = configuredProviders === null || configuredProviders[model.provider] === true;
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.disabled = !available;
-    btn.className = "model-option" + (model.id === selectedModelId ? " active" : "") + (!available ? " unavailable" : "");
+    btn.disabled = false;
+    btn.className = "model-option" + (model.id === selectedModelId ? " active" : "");
     const left = document.createElement("span");
     left.textContent = model.name;
     const note = document.createElement("small");
-    note.textContent = !available
-      ? (model.provider === "mega" ? "Servidor de inferencia propio todavía no conectado" : "Proveedor anterior no configurado")
-      : model.note;
+    note.textContent = inferenceReady
+      ? model.note
+      : "Puedes seleccionarlo; el motor de inferencia todavía no está conectado.";
     left.appendChild(note);
     const price = document.createElement("span");
     price.className = "price";
-    price.textContent = model.price;
+    price.textContent = inferenceReady ? model.price : "PREPARACIÓN";
     btn.append(left, price);
     btn.addEventListener("click", () => {
-      if (!available) return;
       selectedModelId = model.id;
       document.getElementById("model-label").textContent = model.name;
       safeStorage.setItem("abxModel", model.id);
@@ -710,7 +708,7 @@ async function initialize() {
   // Normalizar selecciones antiguas que ya no estén disponibles en el catálogo.
   const modelIds = new Set(MODELS.map(model => model.id));
   if (savedModel && !modelIds.has(savedModel)) {
-    savedModel = "mega-director";
+    savedModel = "mega-scripting";
     safeStorage.setItem("abxModel", savedModel);
   }
   let found = MODELS.find(m => m.id === savedModel);
