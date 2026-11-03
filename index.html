@@ -432,9 +432,8 @@ const MODELS = [
 let isPluginConnected = false;
 let currentConnectionCode = null;
 let selectedModelId = "mega-director";
-const DAILY_TOKEN_COSTS = Object.freeze({ "gemini-3.8-flash": 2, "gemini-3.1-pro-preview": 3 });
-function dailyTokenCostForModel(modelId = selectedModelId) {
-  return Number(DAILY_TOKEN_COSTS[modelId] || 0);
+function dailyTokenCostForModel() {
+  return 0;
 }
 let chatHistory = [];
 let currentUser = null;
@@ -469,10 +468,10 @@ function renderTokenUsage(usage) {
   const send = document.getElementById("send-btn");
   const requiredTokens = dailyTokenCostForModel();
   if (send && dailyUsage.remaining < requiredTokens) {
-    send.title = "No tienes suficientes tokens para el modelo de compatibilidad seleccionado.";
+    send.title = "No tienes suficientes tokens para esta solicitud.";
   } else if (send) {
     send.title = requiredTokens > 0
-      ? "Enviar petición (consume " + requiredTokens + " tokens del modelo de compatibilidad)"
+      ? "Enviar petición"
       : "Enviar petición (MEGA no consume los tokens de compatibilidad)";
   }
 }
