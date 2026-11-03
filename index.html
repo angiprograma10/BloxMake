@@ -593,7 +593,7 @@ function renderModels() {
   const pop = document.getElementById("model-popover");
   pop.textContent = "";
   MODELS.forEach(model => {
-    const inferenceReady = configuredProviders === null || configuredProviders[model.provider] === true;
+    const inferenceReady = Boolean(configuredProviders && configuredProviders[model.provider] === true);
     const btn = document.createElement("button");
     btn.type = "button";
     btn.disabled = false;
