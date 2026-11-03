@@ -276,6 +276,8 @@ body:before {
 .art-a{background:linear-gradient(135deg,#087dff,#07347f 65%,#ff7c19)}.art-b{background:linear-gradient(135deg,#074bb9,#12235c 55%,#ff8b1c)}.art-c{background:linear-gradient(135deg,#073a9b,#075de4 50%,#ff6819)}
 #connect-prompt{background:radial-gradient(ellipse at 85% 10%,rgba(0,110,255,.34),transparent 40%),radial-gradient(ellipse at 10% 100%,rgba(255,112,16,.24),transparent 42%),linear-gradient(135deg,rgba(5,31,83,.96),rgba(3,13,39,.96));border-color:rgba(89,158,255,.32)}
 @media(max-width:1050px){.main-nav{gap:12px}.main-nav a{font-size:12px}}@media(max-width:900px){.main-nav{order:3;width:100%;justify-content:center;flex-wrap:wrap}.header-inner{justify-content:center}.features{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.brand{margin-right:auto}.main-nav{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}.main-nav a{white-space:nowrap}.hero{padding:25px 19px;border-radius:23px}.hero h2{font-size:38px}.features,.cards{grid-template-columns:1fr}.stage{min-height:290px}.page{padding-inline:14px}}
+
+.team-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 8px}.team-card{display:flex;gap:12px;align-items:flex-start;padding:17px;border:1px solid rgba(74,144,255,.3);border-radius:16px;background:linear-gradient(145deg,rgba(8,39,94,.78),rgba(4,15,42,.9));box-shadow:0 12px 30px rgba(0,0,0,.14)}.team-card i{width:38px;height:38px;flex-shrink:0;display:grid;place-items:center;border-radius:12px;background:linear-gradient(140deg,#087aff,#0950c8);color:#fff}.team-card:nth-child(even) i{background:linear-gradient(140deg,#ffb21c,#ff5a13)}.team-card strong{display:block;font-size:13px;margin-bottom:5px}.team-card span{display:block;color:var(--muted);font-size:12px;line-height:1.5}.engine-tag{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;border:1px solid rgba(255,135,46,.38);background:rgba(255,135,46,.1);color:#ffd2ad;font-size:11px;font-weight:800;white-space:nowrap}.agent-trace{margin:0 22px 16px;padding:12px 14px;border:1px solid rgba(76,146,255,.25);border-radius:13px;background:rgba(7,29,68,.72)}.agent-trace-title{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#9dbbe7;font-weight:800;margin-bottom:8px}.agent-trace-list{display:flex;gap:7px;flex-wrap:wrap}.agent-chip{font-size:11px;color:#e7f1ff;border:1px solid rgba(91,153,255,.3);border-radius:999px;padding:6px 9px;background:rgba(39,133,255,.1)}.agent-chip b{color:#ffc18b;margin-right:4px}@media(max-width:900px){.team-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.team-grid{grid-template-columns:1fr}.agent-trace{margin-inline:12px}}
 </style>
 </head>
 <body>
@@ -288,7 +290,7 @@ body:before {
         <small>Creado por el youtuber y desarrollador <strong>Angiblox</strong></small>
       </div>
     </a>
-    <nav class="main-nav" aria-label="Navegación principal"><a href="#top">Inicio</a><a href="#ejemplos">Proyectos</a><a href="#caracteristicas">Características</a><a href="#connect-prompt">Conectar</a></nav>
+    <nav class="main-nav" aria-label="Navegación principal"><a href="#top">Inicio</a><a href="#equipo-mega">Equipo IA</a><a href="#ejemplos">Proyectos</a><a href="#caracteristicas">Características</a><a href="#connect-prompt">Conectar</a></nav>
     <div class="header-actions">
       <button class="pill" id="plugin-status" type="button" onclick="showConnectModal()">
         <i class="fa-solid fa-plug" id="plug-icon" style="color:#f87171"></i>
@@ -307,7 +309,7 @@ body:before {
     <div>
       <div class="eyebrow"><i class="fa-solid fa-bolt"></i> IA para Roblox Studio</div>
       <h2 class="font">Convierte tus ideas en juegos <em>increíbles</em></h2>
-      <p class="lead">MEGA crea scripts, interfaces, mapas y sistemas de Roblox. Conecta el plugin con un código de 5 dígitos y la acción llega a Studio.</p>
+      <p class="lead">MEGA analiza tu objetivo, coordina especialistas en Roblox, construye soluciones conectadas y revisa dependencias antes de enviar acciones a Studio. Conecta el plugin con tu código de 5 dígitos.</p>
       <div class="cta-row">
         <button class="btn btn-primary" type="button" onclick="showConnectModal()"><i class="fa-solid fa-plug"></i> Conectar plugin</button>
         <button class="btn btn-ghost" type="button" onclick="document.getElementById('ejemplos').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-layer-group"></i> Ver qué puede crear</button>
@@ -349,6 +351,16 @@ body:before {
     <div class="feature"><i class="fa-solid fa-cubes"></i><div><strong>Sistemas</strong><span>Monedas, checkpoints, tycoons, obbies e inventarios.</span></div></div>
     <div class="feature"><i class="fa-solid fa-plug-circle-check"></i><div><strong>Plugin real</strong><span>El código de 5 dígitos une esta web con Roblox Studio.</span></div></div>
     <div class="feature"><i class="fa-solid fa-wand-magic-sparkles"></i><div><strong>Juego completo con IA</strong><span>Describe tu idea y MEGA prepara el mapa, la mecánica, la interfaz y los scripts por etapas.</span></div></div>
+  </section>
+
+  <div class="section-title" id="equipo-mega"><div><h3 class="font">Un equipo de IA especializado</h3><p>MEGA DIRECTOR coordina a los especialistas necesarios para cada trabajo.</p></div><span class="engine-tag"><i class="fa-solid fa-bolt"></i> MEGA ENGINE 2.0</span></div>
+  <section class="team-grid" aria-label="Especialistas de MEGA">
+    <article class="team-card"><i class="fa-solid fa-diagram-project"></i><div><strong>MEGA DIRECTOR</strong><span>Planifica el proyecto, reparte tareas, define dependencias y mantiene un contrato común de nombres y rutas.</span></div></article>
+    <article class="team-card"><i class="fa-solid fa-cubes"></i><div><strong>MEGA BUILD</strong><span>Diseño 3D con escala, proporciones, coordenadas, apoyos, huecos, alineación y distribución espacial.</span></div></article>
+    <article class="team-card"><i class="fa-solid fa-code"></i><div><strong>MEGA SCRIPTING</strong><span>Luau, arquitectura cliente-servidor, eventos, validación, depuración y sistemas conectados.</span></div></article>
+    <article class="team-card"><i class="fa-solid fa-window-maximize"></i><div><strong>MEGA UI</strong><span>Interfaces con jerarquía visual, tamaños calculados, márgenes, contraste y controles funcionales.</span></div></article>
+    <article class="team-card"><i class="fa-solid fa-wand-magic-sparkles"></i><div><strong>MEGA VFX</strong><span>Iluminación, partículas y efectos ligados a objetos o eventos, cuidando el rendimiento.</span></div></article>
+    <article class="team-card"><i class="fa-solid fa-gamepad"></i><div><strong>MEGA JUEGO</strong><span>Mecánicas, estados, reglas, progresión, recompensas y casos límite multijugador.</span></div></article>
   </section>
 
   <div class="section-title" id="ejemplos">
@@ -418,9 +430,9 @@ const LOGO = "logo-mega.webp?v=3";
 const BACKEND_URL = "https://abx-build-backend.onrender.com";
 let fullGameModeRequested = false;
 const MODELS = [
-  { id:"mega-lite", provider:"mega", name:"MEGA Lite", note:"Tareas rápidas: scripts, correcciones, ajustes y construcciones concretas.", price:"GRATIS", plan:"free", requiresPaidPlan:false },
-  { id:"mega-lite-2", provider:"mega", name:"MEGA Lite 2.0", note:"Trabajos medianos: sistemas, interfaces y construcciones más detalladas.", price:"GRATIS", plan:"free", requiresPaidPlan:false },
-  { id:"mega-lite-3-5", provider:"mega", name:"MEGA Lite 3.5", note:"Proyectos importantes con varios especialistas y revisión técnica.", price:"GRATIS", plan:"free", requiresPaidPlan:false },
+  { id:"mega-lite", provider:"mega", name:"MEGA Lite", note:"Tareas rápidas con implementación completa, dependencias claras y alcance preciso.", price:"GRATIS", plan:"free", requiresPaidPlan:false },
+  { id:"mega-lite-2", provider:"mega", name:"MEGA Lite 2.0", note:"Sistemas medianos coordinados, con revisión de rutas, lógica, geometría y UI.", price:"GRATIS", plan:"free", requiresPaidPlan:false },
+  { id:"mega-lite-3-5", provider:"mega", name:"MEGA Lite 3.5", note:"Proyectos grandes con hasta cinco especialistas, integración y auditoría técnica.", price:"GRATIS", plan:"free", requiresPaidPlan:false },
   { id:"mega-go", provider:"mega", name:"MEGA GO", note:"Juegos complejos: programación avanzada, VFX, interfaces y construcciones coordinadas.", price:"DE PAGA", plan:"paid", requiresPaidPlan:true },
   { id:"mega-max", provider:"mega", name:"MEGA MAX", note:"Proyectos completos con planificación profunda, integración y auditoría reforzada.", price:"DE PAGA", plan:"paid", requiresPaidPlan:true }
 ];
@@ -546,6 +558,36 @@ function connectWithCode() {
   })
   .catch(() => alert("No pude contactar el servidor. Espera unos segundos e intenta otra vez."));
 }
+function addAgentTrace(agents) {
+  if (!Array.isArray(agents) || !agents.length) return;
+  const container = document.getElementById("chat-messages");
+  const panel = document.createElement("div");
+  panel.className = "agent-trace";
+  const title = document.createElement("div");
+  title.className = "agent-trace-title";
+  title.textContent = "Especialistas que participaron";
+  const list = document.createElement("div");
+  list.className = "agent-trace-list";
+  const names = {
+    "mega-build":"MEGA BUILD",
+    "mega-scripting":"MEGA SCRIPTING",
+    "mega-ui":"MEGA UI",
+    "mega-fx":"MEGA VFX",
+    "mega-gameplay":"MEGA JUEGO"
+  };
+  agents.forEach(agent => {
+    const chip = document.createElement("span");
+    chip.className = "agent-chip";
+    const label = document.createElement("b");
+    label.textContent = names[agent.specialist] || "MEGA";
+    chip.appendChild(label);
+    chip.appendChild(document.createTextNode(String(Number(agent.actionCount) || 0) + " acciones"));
+    list.appendChild(chip);
+  });
+  panel.append(title, list);
+  container.appendChild(panel);
+  container.scrollTop = container.scrollHeight;
+}
 function addMessage(role, text) {
   const container = document.getElementById("chat-messages");
   const row = document.createElement("div");
@@ -667,6 +709,7 @@ async function sendMessage() {
     if (data.usage) renderTokenUsage(data.usage);
     if (data.reply) {
       addMessage("ai", data.reply);
+      addAgentTrace(data.agents);
       chatHistory.push({ role:"model", text:data.reply });
     } else {
       addMessage("ai", data.error || "No recibí una respuesta.");
