@@ -388,7 +388,7 @@ body:before {
       <div class="composer">
         <div class="model-wrap">
           <button class="btn" id="model-btn" type="button" onclick="toggleModels(event)">
-            <span id="model-label">MEGA SCRIPTING</span>
+            <span id="model-label">MEGA Lite</span>
             <i class="fa-solid fa-chevron-up"></i>
           </button>
           <div id="model-popover"></div>
@@ -421,23 +421,16 @@ body:before {
 const LOGO = "logo-mega.webp?v=3";
 const BACKEND_URL = "https://abx-build-backend.onrender.com";
 let fullGameModeRequested = false;
-const SPECIALIST_LABELS = Object.freeze({
-  "mega-scripting": "MEGA SCRIPTING",
-  "mega-build": "MEGA BUILD",
-  "mega-fx": "MEGA VFX",
-  "mega-ui": "MEGA UI",
-  "mega-gameplay": "MEGA JUEGO"
-});
 const MODELS = [
-  { id:"mega-scripting", provider:"mega", name:"MEGA SCRIPTING", note:"Luau, arquitectura cliente-servidor, sistemas y depuración.", price:"MEGA", tier:"mega" },
-  { id:"mega-build", provider:"mega", name:"MEGA BUILD", note:"Construcción 3D, geometría, proporciones y composición espacial.", price:"MEGA", tier:"mega" },
-  { id:"mega-fx", provider:"mega", name:"MEGA VFX", note:"Iluminación, partículas, ambientes y efectos visuales.", price:"MEGA", tier:"mega" },
-  { id:"mega-ui", provider:"mega", name:"MEGA UI", note:"Interfaces, jerarquía visual, diseño y experiencia de usuario.", price:"MEGA", tier:"mega" },
-  { id:"mega-gameplay", provider:"mega", name:"MEGA JUEGO", note:"Mecánicas, progresión, reglas y sistemas jugables.", price:"MEGA", tier:"mega" }
+  { id:"mega-lite", provider:"mega", name:"MEGA Lite", note:"Tareas rápidas: scripts, correcciones, ajustes y construcciones concretas.", price:"GRATIS", plan:"free", requiresPaidPlan:false },
+  { id:"mega-lite-2", provider:"mega", name:"MEGA Lite 2.0", note:"Trabajos medianos: sistemas, interfaces y construcciones más detalladas.", price:"GRATIS", plan:"free", requiresPaidPlan:false },
+  { id:"mega-lite-3-5", provider:"mega", name:"MEGA Lite 3.5", note:"Proyectos importantes con varios especialistas y revisión técnica.", price:"GRATIS", plan:"free", requiresPaidPlan:false },
+  { id:"mega-go", provider:"mega", name:"MEGA GO", note:"Juegos complejos: programación avanzada, VFX, interfaces y construcciones coordinadas.", price:"DE PAGA", plan:"paid", requiresPaidPlan:true },
+  { id:"mega-max", provider:"mega", name:"MEGA MAX", note:"Proyectos completos con planificación profunda, integración y auditoría reforzada.", price:"DE PAGA", plan:"paid", requiresPaidPlan:true }
 ];
 let isPluginConnected = false;
 let currentConnectionCode = null;
-let selectedModelId = "mega-scripting";
+let selectedModelId = "mega-lite";
 function dailyTokenCostForModel() {
   return 0;
 }
@@ -601,29 +594,34 @@ function renderModels() {
   pop.textContent = "";
   MODELS.forEach(model => {
     const inferenceReady = Boolean(configuredProviders && configuredProviders[model.provider] === true);
+    const locked = Boolean(model.requiresPaidPlan);
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.disabled = false;
-    btn.className = "model-option" + (model.id === selectedModelId ? " active" : "");
+    btn.disabled = locked;
+    btn.className = "model-option" + (model.id === selectedModelId ? " active" : "") + (locked ? " unavailable" : "");
     const left = document.createElement("span");
     left.textContent = model.name;
     const note = document.createElement("small");
-    note.textContent = inferenceReady
-      ? model.note
-      : "Puedes seleccionarlo; el motor de inferencia todavía no está conectado.";
+    note.textContent = locked
+      ? "Plan de paga. Se activará cuando esté lista la suscripción."
+      : inferenceReady
+        ? model.note
+        : "Puedes seleccionarlo; el motor de inferencia todavía no está conectado.";
     left.appendChild(note);
     const price = document.createElement("span");
     price.className = "price";
-    price.textContent = inferenceReady ? model.price : "PREPARACIÓN";
+    price.textContent = locked ? "DE PAGA" : inferenceReady ? model.price : "PREPARACIÓN";
     btn.append(left, price);
-    btn.addEventListener("click", () => {
-      selectedModelId = model.id;
-      document.getElementById("model-label").textContent = model.name;
-      safeStorage.setItem("abxModel", model.id);
-      renderTokenUsage(dailyUsage);
-      toggleModels();
-      renderModels();
-    });
+    if (!locked) {
+      btn.addEventListener("click", () => {
+        selectedModelId = model.id;
+        document.getElementById("model-label").textContent = model.name;
+        safeStorage.setItem("abxModel", model.id);
+        renderTokenUsage(dailyUsage);
+        toggleModels();
+        renderModels();
+      });
+    }
     pop.appendChild(btn);
   });
 }
@@ -672,12 +670,7 @@ async function sendMessage() {
     }
     if (data.usage) renderTokenUsage(data.usage);
     if (data.reply) {
-      const agentsLabel = Array.isArray(data.agents) && data.agents.length
-        ? "\\n\\nEspecialistas participantes: " + data.agents.map(agent =>
-            SPECIALIST_LABELS[agent.specialist] || "MEGA"
-          ).join(", ")
-        : "";
-      addMessage("ai", data.reply + agentsLabel);
+      addMessage("ai", data.reply);
       chatHistory.push({ role:"model", text:data.reply });
     } else {
       addMessage("ai", data.error || "No recibí una respuesta.");
@@ -717,7 +710,7 @@ async function initialize() {
   // Normalizar selecciones antiguas que ya no estén disponibles en el catálogo.
   const modelIds = new Set(MODELS.map(model => model.id));
   if (savedModel && !modelIds.has(savedModel)) {
-    savedModel = "mega-scripting";
+    savedModel = "mega-lite";
     safeStorage.setItem("abxModel", savedModel);
   }
   let found = MODELS.find(m => m.id === savedModel);
